@@ -64,12 +64,13 @@
 
 		validate : function(file)
 		{
-			var validateConfig = require('./lib/validate-config');
-			
-			if(validateConfig.isValid(this))
-			{
+			// TODO: Skip validate
+			// var validateConfig = require('./lib/validate-config');
+
+			// if(validateConfig.isValid(this))
+			// {
 				this.job(file);
-			}
+			// }
 		},
 
 		cleanJSON : function(json)
@@ -85,7 +86,7 @@
 		job : function(file)
 		{
 			var json = JSON.parse(JSONcleaner.clean(file));
-			
+
 			if(!fs.existsSync('./models'))
 			{
 				fs.mkdirSync('./models');
@@ -103,19 +104,19 @@
 
 			json = this.cleanJSON(json);
 
-			var dissectModel = require('./lib/dissect-model')
-			  , dissectController = require('./lib/dissect-controller')
-			  , dissectView = require('./lib/dissect-view')
-			  , dissectServer = require('./lib/dissect-server');
-			
-			dissectServer.dissect(this, json.models);
+			// var dissectModel = require('./lib/dissect-model')
+			//   , dissectController = require('./lib/dissect-controller')
+			//   , dissectView = require('./lib/dissect-view')
+			//   , dissectServer = require('./lib/dissect-server');
 
-			for(var index in json.models)
-			{
-				dissectModel.dissect(this, json.models[index]);
-				dissectController.dissect(this, json.models[index]);
-				dissectView.dissect(this, json.models[index]);
-			}
+			// dissectServer.dissect(this, json.models);
+			//
+			// for(var index in json.models)
+			// {
+			// 	dissectModel.dissect(this, json.models[index]);
+			// 	dissectController.dissect(this, json.models[index]);
+			// 	dissectView.dissect(this, json.models[index]);
+			// }
 		},
 
 		help : function()

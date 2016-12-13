@@ -1,0 +1,56 @@
+doctype html
+html
+	head
+		title Person model
+		meta(charset='utf-8')
+		meta(name='viewport', content='width=device-width, initial-scale=1.0')
+		style.
+			table { margin: 10px 0; }
+			td { padding: 5px; }
+			p table { display: inline-block; }
+	body
+		h1 Single entry for Person
+		p <b>Path:</b> /
+			a(href='/person') person
+			='/'+person._id
+		ul
+			li
+				b name: 
+				= person.name 
+			li
+				b username: 
+				= person.username 
+			li
+				b email: 
+				= person.email 
+			li
+				b password: 
+				= person.password 
+			li
+				b age: 
+				= person.age 
+			li
+				b octopi: 
+				a(href='/person/'+person._id+'/octopus/new') Add new octopus
+				table(border='1', cellspacing='0')
+					thead
+						td model
+						td color
+						td
+					tbody
+						-for(i=0; i<person.octopus.length; i++)
+							tr
+								td=person.octopus[i].model
+								td=person.octopus[i].color
+								td
+									form(action='/person/'+person._id +'/octopus/'+i, method='POST')
+										input(type='hidden', name='_method', value='DELETE')
+										button Delete
+
+		form(action='/person/'+person._id, method='POST')
+			input(type='hidden', name='_method', value='DELETE')
+			a(href='/person/'+person._id +'/edit')
+				button(type='button') Edit
+			button Delete
+		p
+			a(href='/person') Person home
