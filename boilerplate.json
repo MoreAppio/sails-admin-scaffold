@@ -2,25 +2,20 @@
 // Do exactly on this pattern!
 
 {
+	"controllerBasePath": "/api/controllers",
 	"dest": "export",
 	"models": [
 		{
 			"name": "Person", // always singular!
 			"crud": true,
 			"fields": [
-				{ "name": "name", "type": "String" },
-				{ "name": "username", "type": "String", "unique": true },
+				{ "name": "name", "type": "String", "length": "32" },
+				{ "name": "username", "type": "int", "unique": true },
 				{ "name": "email", "type": "String", "unique": true },
 				{ "name": "password", "type": "String" },
-				{ "name": "age", "type": "Number" },
-				{
-					"name": "Octopus", // always singular!
-					"type": "Json",
-					"content": [
-						{ "name": "model", "type": "String" },
-						{ "name": "color", "type": "Number" }
-					]
-				}
+				{ "name": "age", "type": "int" },
+        { "name": "price", "type": "decimal", "length": "15, 4", "default": "0.0000" },
+        { "name": "product_name", "type": "String", "length": "10", "unique": true }
 			]
 		}
 	]

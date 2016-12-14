@@ -1,4 +1,7 @@
 'use strict';
+import dissectController from './lib/dissect-controller';
+import dissectView from './lib/dissect-view';
+import dissectModel from './lib/dissect-model';
 
 (function()
 {
@@ -87,29 +90,44 @@
 
 		job : async function(file)
 		{
-			var json = JSON.parse(JSONcleaner.clean(file));
+      try {
+        var json = JSON.parse(JSONcleaner.clean(file));
 
-			console.log(json);
-			await fse.removeSync(json.dest);
-			await fse.ensureDirSync(path.join(json.dest, '/api/controllers/admin'));
-			await fse.ensureDirSync(path.join(json.dest, '/api/controllers/api/admin'));
-			await fse.ensureDirSync(path.join(json.dest, '/api/controllers/api/admin'));
-			json = this.cleanJSON(json);
+        console.log(json);
+        console.log(path.join(json.dest, json.controllerBasePath, '/admin'));
+        await fse.removeSync(json.dest);
+        await fse.ensureDirSync(path.join(json.dest, json.controllerBasePath, '/admin'));
+        await fse.ensureDirSync(path.join(json.dest, json.controllerBasePath, '/api/admin'));
+        await fse.ensureDirSync(path.join(json.dest, json.controllerBasePath, '/api/admin'));
+        await fse.ensureDirSync(path.join(json.dest, '/api/models'));
+        json = this.cleanJSON(json);
+        //
 
-			// var dissectModel = require('./lib/dissect-model')
-			//   , dissectController = require('./lib/dissect-controller')
-			//   , dissectView = require('./lib/dissect-view')
-			//   , dissectServer = require('./lib/dissect-server');
+        for(let model of json.models) {
+          await fse.ensureDirSync(path.join(json.dest, `/view-labfnp/admin/${model.name}`));
 
-			// dissectServer.dissect(this, json.models);
-			//
-			for(var index in json.models)
-			{
-				fse.ensureDirSync(path.join(json.dest, `/view-labfnp/admin/${json.models[index].name}`));
-			// 	dissectModel.dissect(this, json.models[index]);
-			// 	dissectController.dissect(this, json.models[index]);
-			// 	dissectView.dissect(this, json.models[index]);
-			}
+          await dissectController.dissect({
+           scaffold: this,
+           model,
+           config: json,
+          });
+
+          await dissectView.dissect({
+           scaffold: this,
+           model,
+           config: json,
+          });
+
+          await dissectModel.dissect({
+           scaffold: this,
+           model,
+           config: json,
+          });
+
+        }
+      } catch (e) {
+        console.log(e);
+      }
 		},
 
 		help : function()
