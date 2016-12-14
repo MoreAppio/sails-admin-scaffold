@@ -2,6 +2,7 @@
 // Do exactly on this pattern!
 
 {
+	"dest": "export",
 	"models": [
 		{
 			"name": "Person", // always singular!

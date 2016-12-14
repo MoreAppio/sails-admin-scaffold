@@ -6,7 +6,9 @@
 	var fs = require('fs')
 	  , arg = require('./lib/argument-parser')
 	  , JSONcleaner = require('./lib/comment-cut-out')
-	  , normalize = require('./lib/normalize');
+	  , normalize = require('./lib/normalize')
+		, fse = require('fs-extra')
+		, path = require('path');
 
 	// Constants
 	var ct = require('./lib/constants');
@@ -83,25 +85,15 @@
 			return json;
 		},
 
-		job : function(file)
+		job : async function(file)
 		{
 			var json = JSON.parse(JSONcleaner.clean(file));
 
-			if(!fs.existsSync('./models'))
-			{
-				fs.mkdirSync('./models');
-			}
-
-			if(!fs.existsSync('./controllers'))
-			{
-				fs.mkdirSync('./controllers');
-			}
-
-			if(!fs.existsSync('./views'))
-			{
-				fs.mkdirSync('./views');
-			}
-
+			console.log(json);
+			await fse.removeSync(json.dest);
+			await fse.ensureDirSync(path.join(json.dest, '/api/controllers/admin'));
+			await fse.ensureDirSync(path.join(json.dest, '/api/controllers/api/admin'));
+			await fse.ensureDirSync(path.join(json.dest, '/api/controllers/api/admin'));
 			json = this.cleanJSON(json);
 
 			// var dissectModel = require('./lib/dissect-model')
@@ -111,12 +103,13 @@
 
 			// dissectServer.dissect(this, json.models);
 			//
-			// for(var index in json.models)
-			// {
+			for(var index in json.models)
+			{
+				fse.ensureDirSync(path.join(json.dest, `/view-labfnp/admin/${json.models[index].name}`));
 			// 	dissectModel.dissect(this, json.models[index]);
 			// 	dissectController.dissect(this, json.models[index]);
 			// 	dissectView.dissect(this, json.models[index]);
-			// }
+			}
 		},
 
 		help : function()
@@ -167,8 +160,5 @@
 		}
 	}
 
-	exports.exec = function()
-	{
-		new Scaffold();
-	}
+	new Scaffold();
 })();
