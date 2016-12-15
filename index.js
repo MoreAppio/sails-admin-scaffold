@@ -104,7 +104,6 @@ import dissectModel from './lib/dissect-model';
         //
 
         for(let model of json.models) {
-          await fse.ensureDirSync(path.join(json.dest, `/view-labfnp/admin/${model.name}`));
 
           await dissectController.dissect({
            scaffold: this,
