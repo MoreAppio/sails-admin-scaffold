@@ -4,7 +4,7 @@
   "description": "A library that provides great scaffolding",
   "main": "index.js",
   "scripts": {
-    "start": "babel-node --presets es2015,stage-0 index.js -f RolesToMenuItem.json",
+    "start": "babel-node --presets es2015,stage-0 index.js -f",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
