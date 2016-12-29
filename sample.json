@@ -9,7 +9,15 @@
         "name": "role_menu_item_test", // 駝峰的話要用_分格開來
         "crud": true,
         "isServerSidePaging": false,
+        "queryInclude": "",
         "fields": [{
+            "name": "id",
+            "type": "int",
+            "length": "11",
+            "layout": {
+              "label": "ID"
+            }
+        }, {
             "name": "RoleId",
             "type": "String",
             "length": "32",
