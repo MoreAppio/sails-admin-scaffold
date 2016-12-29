@@ -4,8 +4,9 @@
 {
     "controllerBasePath": "/api/controllers",
     "dest": "export",
+    "target": "labfnp",
     "models": [{
-        "name": "role_menu_item", // 駝峰的話要用_分格開來
+        "name": "role_menu_item_test", // 駝峰的話要用_分格開來
         "crud": true,
         "isServerSidePaging": false,
         "fields": [{
