@@ -7,6 +7,7 @@
     "models": [{
         "name": "role_menu_item", // 駝峰的話要用_分格開來
         "crud": true,
+        "isServerSidePaging": false,
         "fields": [{
             "name": "RoleId",
             "type": "String",
@@ -19,7 +20,27 @@
             "type": "String",
             "length": "32",
             "layout": {
-              "label": "清單 ID"
+              "label": "MenuItemId ID",
+              "hideWhenCreate": true,
+              "hideWhenEdit": true
+            }
+        }, {
+            "name": "ATMId",
+            "type": "String",
+            "length": "32",
+            "layout": {
+              "label": "ATMId ID",
+              "hideWhenCreate": true,
+              "hideWhenEdit": true
+            }
+        }, {
+            "name": "TypeId",
+            "type": "String",
+            "length": "32",
+            "layout": {
+              "label": "TypeId ID",
+              "hideWhenCreate": true,
+              "hideWhenEdit": true
             }
         }]
     }]
