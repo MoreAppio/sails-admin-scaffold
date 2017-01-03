@@ -1,3 +1,7 @@
+# 使用方法
+## (點我)[https://github.com/trunk-studio/cargocms/issues/1226]
+
+
 # Node Scaffold
 Quick scaffolding on several frameworks!
 
