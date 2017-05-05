@@ -189,13 +189,16 @@ class Table extends BaseTable
         {
           if ($column->getColumnName() !== 'id') {
             $type = $this->getFormatter()->getDatatypeConverter()->getType($column);
-            $c = array();
-            $c['"type"'] = $this->getJSObject(sprintf('"%s"', $type ? $type : 'STRING.BINARY'), true, true);
-            $c['"name"'] = $this->getJSObject(sprintf('"%s"', $column->getColumnName()), true, true);
 
-            $length = $column->getLength();
-            if ($length < 0) $length = 11;
-            $c['"length"'] = $this->getJSObject(sprintf('"%s"', $length), true, true);
+            $c = array();
+            $c['"name"'] = $this->getJSObject(sprintf('"%s"', $column->getTable()->getRawTableName()), true, true);
+            $c['"type"'] = $this->getJSObject(sprintf('"%s"', $type ? $type : 'STRING.BINARY'), true, true);
+            $c['"default"'] = $this->getJSObject(sprintf('"%s"', $column->getDefaultValue()), true, true);  
+            $c['"allowNull"'] = !$column->isNotNull();
+
+            $layout = array();
+            $layout['"label"'] = $this->getJSObject(sprintf('"%s"', $column->getColumnName()), true, true);
+            $c['"layout"'] = $layout;
 
             if ($column->isPrimary()) {
                 $c['"primaryKey"'] = true;
@@ -203,10 +206,12 @@ class Table extends BaseTable
             if ($column->isAutoIncrement()) {
                 $c['"autoIncrement"'] = true;
             }
-            
-            $layout = array();
-            $layout['"label"'] = $this->getJSObject(sprintf('"%s"', $column->getColumnName()), true, true);
-            $c['"layout"'] = $layout;
+            if ($column->isUnique()) {
+              $c['"unique"'] = true;
+            }
+            if ($column->getLength() > 0) {
+              $c['"length"'] = $column->getLength();
+            }
             array_push($result, $c);
           }
         }

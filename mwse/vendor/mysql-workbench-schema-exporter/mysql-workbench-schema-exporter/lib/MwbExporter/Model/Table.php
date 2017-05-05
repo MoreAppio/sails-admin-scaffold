@@ -328,7 +328,8 @@ class Table extends Base
             $tableName = $singular;
         }
 
-        return $this->beautify($tableName);
+        // return $this->beautify($tableName);
+        return $tableName;
     }
 
     /**

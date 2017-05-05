@@ -221,6 +221,16 @@ class Column extends Base
     }
 
     /**
+     * Is column not null (aka. required).
+     *
+     * @return boolean
+     */
+    public function isUnique()
+    {
+        return $this->isUnique;
+    }
+
+    /**
      * Is column auto increment.
      *
      * @return boolean
