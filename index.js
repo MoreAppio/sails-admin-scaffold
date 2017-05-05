@@ -1,181 +1,48 @@
 'use strict';
-import dissectController from './lib/dissect-controller';
-import dissectView from './lib/dissect-view';
-import dissectModel from './lib/dissect-model';
+import fs from 'fs';
+import cp from 'child_process';
 
-(function()
-{
-	// Extensions
-	var fs = require('fs')
-	  , arg = require('./lib/argument-parser')
-	  , JSONcleaner = require('./lib/comment-cut-out')
-	  , normalize = require('./lib/normalize')
-		, fse = require('fs-extra')
-		, path = require('path');
+(async() => {
 
-	// Constants
-	var ct = require('./lib/constants');
+  const filePath = {
+    erd: 'erd.mwb',
+    mwse: 'mwse/vendor/bin/mysql-workbench-schema-export',
+  };
+  const rootPath = './generated';
+  const exportMode = ['node-sequelize', 'scaffold'];
 
-	var Scaffold = function()
-	{
-		this.init();
+  const StringDecoder = require('string_decoder').StringDecoder;
+  const decoder = new StringDecoder('utf8');
 
-		this.config;
-	}
+  try {
+    const buildErdScript =
+      `php ${filePath.mwse} --export=${exportMode[0]} ${filePath.erd} ${rootPath}`;
+    const execBuildErd = await cp.execSync(buildErdScript);
+    const textChunk = decoder.write(execBuildErd);
+    console.log('@ execBuildErd result=>', textChunk);
 
-	Scaffold.prototype =
-	{
-		init : function()
-		{
-			this.parse();
-		},
+    const readDir = await fs.readdirSync(rootPath);
+    console.log('@ readDir result=>', readDir);
 
-		parse : function()
-		{
-			// Configuration
-			var config = arg.parse(process.argv);
-
-			if(config.help)
-			{
-				this.help();
-			}
-			else if(config.file == null)
-			{
-				this.shell();
-			}
-			else
-			{
-				var err = false
-				, file;
-
-				try
-				{
-					file = fs.readFileSync(config.file, 'utf8');
-				}
-				catch(e)
-				{
-					err = true;
-					console.log('Couldn\'t access \''+config.file+'\'!');
-				}
-
-				if(!err)
-				{
-					this.config = config;
-
-					this.validate(file);
-				}
-			}
-		},
-
-		validate : function(file)
-		{
-			// TODO: Skip validate
-			// var validateConfig = require('./lib/validate-config');
-
-			// if(validateConfig.isValid(this))
-			// {
-				this.job(file);
-			// }
-		},
-
-		cleanJSON : function(json)
-		{
-			for(var index in json.models)
-			{
-				json.models[index] = normalize.do(json.models[index]);
-			}
-
-			return json;
-		},
-
-		job : async function(file)
-		{
+    let count = 0;
+    for (const file of readDir) {
       try {
-        var json = JSON.parse(JSONcleaner.clean(file));
-
-        console.log(json);
-        console.log(path.join(json.dest, json.controllerBasePath, '/admin'));
-        await fse.removeSync(json.dest);
-        await fse.ensureDirSync(path.join(json.dest, json.controllerBasePath, '/admin'));
-        await fse.ensureDirSync(path.join(json.dest, json.controllerBasePath, '/api/admin'));
-        await fse.ensureDirSync(path.join(json.dest, json.controllerBasePath, '/api/admin'));
-        await fse.ensureDirSync(path.join(json.dest, '/api/models'));
-        json = this.cleanJSON(json);
-        //
-
-        for(let model of json.models) {
-
-          await dissectController.dissect({
-           scaffold: this,
-           model,
-           config: json,
-          });
-
-          await dissectView.dissect({
-           scaffold: this,
-           model,
-           config: json,
-          });
-
-          await dissectModel.dissect({
-           scaffold: this,
-           model,
-           config: json,
-          });
-
+        count ++;
+        if (file.includes('.bak')) {
+          console.warn(`! Skipped ${file} because it is a .bak file.`);
+          continue;
         }
-      } catch (e) {
-        console.log(e);
+        console.log(`@ ${count}/${readDir.length} file name=> ${file}`);
+        const execScaffold = `babel-node --presets es2015,stage-0 scaffold.js -f ${rootPath}/${file}`;
+        const result = await cp.execSync(execScaffold);
+        const textChunk = decoder.write(result);
+        if (result) console.log('@ execSync result=>\n', textChunk);
+      } catch (error) {
+        throw new Error(error);
       }
-		},
+    }
+  } catch (error) {
+    console.error(error);
+  }
 
-		help : function()
-		{
-			console.log('Usage: node xx.js [options argument]\n');
-			console.log('Options:');
-
-			console.log('  -h, --http-framework name\tHttp framework to use (default: express).');
-			console.log('  -de, --db-engine name\t\tDB engine to use (default: mongodb).');
-			console.log('  -df, --db-framework name\tDB framework to use (default: mongoose).');
-			console.log('  -f, --file filepath\t\tFile to read (required).');
-			console.log('  -F, --force-overwrite\t\tForce overwrite of existing files.');
-
-			console.log('\nExample:');
-			console.log('  node scaffold.js --file data.json --http-framework koa -de mysql -F');
-
-			console.log('\nDocumentation can be found at http://github.com/mauriciogior/node-scaffold');
-		},
-
-		shell : function()
-		{
-			this.message('Please give me a file through -file! (ie. -file data.json)', ct.MSG_ERROR);
-		},
-
-		message : function(message, type)
-		{
-			if(type == ct.MSG_ERROR)
-			{
-				console.log('\x1b[1;97;101m%s\x1b[0m %s', '!ERROR!', message);
-			}
-			else if(type == ct.MSG_WARNING)
-			{
-				console.log('\x1b[1;41;103m%s\x1b[0m %s', '!WARNING!', message);
-			}
-			else if(type == ct.MSG_SUCCESS)
-			{
-				console.log('\x1b[1;97;42m%s\x1b[0m %s', ' SUCCESS ', message);
-			}
-			else if(type == ct.MSG_FAILED)
-			{
-				console.log('\x1b[1;97;101m%s\x1b[0m %s', '!FAIL!', message);
-			}
-		},
-
-		finalize : function()
-		{
-			this.message('Finished scaffolding!', ct.MSG_SUCCESS);
-		}
-	}
-
-	new Scaffold();
 })();

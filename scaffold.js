@@ -1,0 +1,185 @@
+'use strict';
+import dissectController from './lib/dissect-controller';
+import dissectView from './lib/dissect-view';
+import dissectModel from './lib/dissect-model';
+
+(function()
+{
+	// Extensions
+	var fs = require('fs')
+	  , arg = require('./lib/argument-parser')
+	  , JSONcleaner = require('./lib/comment-cut-out')
+	  , normalize = require('./lib/normalize')
+		, fse = require('fs-extra')
+		, path = require('path');
+
+	// Constants
+	var ct = require('./lib/constants');
+  var config = {};
+
+	var Scaffold = function()
+	{
+		this.init();
+
+		this.config;
+	}
+
+	Scaffold.prototype =
+	{
+		init : function()
+		{
+			this.parse();
+		},
+
+		parse : function()
+		{
+			// Configuration
+			config = arg.parse(process.argv);
+
+			if(config.help)
+			{
+				this.help();
+			}
+			else if(config.file == null)
+			{
+				this.shell();
+			}
+			else
+			{
+				var err = false
+				, file;
+
+				try
+				{
+					file = fs.readFileSync(config.file, 'utf8');
+				}
+				catch(e)
+				{
+					err = true;
+					console.log('Couldn\'t access \''+config.file+'\'!');
+				}
+
+				if(!err)
+				{
+					this.config = config;
+
+					this.validate(file);
+				}
+			}
+		},
+
+		validate : function(file)
+		{
+			// TODO: Skip validate
+			// var validateConfig = require('./lib/validate-config');
+
+			// if(validateConfig.isValid(this))
+			// {
+				this.job(file);
+			// }
+		},
+
+		cleanJSON : function(json)
+		{
+			for(var index in json.models)
+			{
+				json.models[index] = normalize.do(json.models[index]);
+			}
+
+			return json;
+		},
+
+		job : async function(file)
+		{
+      try {
+        var json = JSON.parse(JSONcleaner.clean(file));
+
+        console.log(json);
+        console.log(path.join(json.dest, json.controllerBasePath, '/admin'));
+        if (config.clean) {
+          await fse.removeSync(json.dest);
+        }
+        await fse.ensureDirSync(path.join(json.dest, json.controllerBasePath, '/admin'));
+        await fse.ensureDirSync(path.join(json.dest, json.controllerBasePath, '/api/admin'));
+        await fse.ensureDirSync(path.join(json.dest, json.controllerBasePath, '/api/admin'));
+        await fse.ensureDirSync(path.join(json.dest, '/api/models'));
+        json = this.cleanJSON(json);
+        //
+
+        for(let model of json.models) {
+
+          await dissectController.dissect({
+           scaffold: this,
+           model,
+           config: json,
+          });
+
+          await dissectView.dissect({
+           scaffold: this,
+           model,
+           config: json,
+          });
+
+          await dissectModel.dissect({
+           scaffold: this,
+           model,
+           config: json,
+          });
+
+        }
+      } catch (e) {
+        console.log(e);
+      }
+		},
+
+		help : function()
+		{
+			console.log('Usage: node xx.js [options argument]\n');
+			console.log('Options:');
+
+			console.log('  -h, --http-framework name\tHttp framework to use (default: express).');
+			console.log('  -de, --db-engine name\t\tDB engine to use (default: mongodb).');
+			console.log('  -df, --db-framework name\tDB framework to use (default: mongoose).');
+			console.log('  -f, --file filepath\t\tFile to read (required).');
+			console.log('  -F, --force-overwrite\t\tForce overwrite of existing files.');
+			console.log('  -c, --clean\t\t Clean exist files before scaffolding.');
+
+			console.log('\nExample:');
+			console.log('  node scaffold.js --file data.json --http-framework koa -de mysql -F');
+
+			console.log('\nDocumentation can be found at http://github.com/mauriciogior/node-scaffold');
+		},
+
+		shell : function()
+		{
+			this.message('Please give me a file through -file! (ie. -file data.json)', ct.MSG_ERROR);
+		},
+
+		message : function(message, type)
+		{
+			if(type == ct.MSG_ERROR)
+			{
+				console.log('\x1b[1;97;101m%s\x1b[0m %s', '!ERROR!', message);
+			}
+			else if(type == ct.MSG_WARNING)
+			{
+				console.log('\x1b[1;41;103m%s\x1b[0m %s', '!WARNING!', message);
+			}
+			else if(type == ct.MSG_SUCCESS)
+			{
+				console.log('\x1b[1;97;42m%s\x1b[0m %s', ' SUCCESS ', message);
+			}
+			else if(type == ct.MSG_FAILED)
+			{
+				console.log('\x1b[1;97;101m%s\x1b[0m %s', '!FAIL!', message);
+			}
+		},
+
+		finalize : function()
+		{
+			this.message('Finished scaffolding!', ct.MSG_SUCCESS);
+		}
+	}
+
+	new Scaffold();
+})();

@@ -1,0 +1,45 @@
+{
+	"name" : "mysql-workbench-schema-exporter/mysql-workbench-schema-exporter",
+	"type" : "library",
+	"description" : "MySQL Workbench Schema Exporter",
+	"keywords" : [
+		"mysql",
+		"mysql workbench",
+		"database",
+		"cli",
+		"doctrine",
+		"propel",
+		"extjs",
+		"zend",
+		"sequelizejs"
+	],
+	"homepage" : "https://github.com/mysql-workbench-schema-exporter/mysql-workbench-schema-exporter",
+	"license" : "MIT",
+	"authors" : [{
+			"name" : "Johannes Mueller",
+			"email" : "circus2@web.de",
+			"role" : "Developer"
+		}, {
+			"name" : "Toha",
+			"email" : "tohenk@yahoo.com",
+			"role" : "Developer"
+		}, {
+			"name" : "Robert Vock",
+			"email" : "robertvock82@gmail.com",
+			"role" : "Developer"
+		}
+	],
+	"require" : {
+		"php" : ">=5.4.0",
+		"doctrine/inflector" : "^1.0.0"
+	},
+	"bin" : [
+		"bin/mysql-workbench-schema-export",
+		"bin/update-sql-reserved-words"
+	],
+	"autoload" : {
+		"psr-0" : {
+			"MwbExporter\\" : "lib/"
+		}
+	}
+}
