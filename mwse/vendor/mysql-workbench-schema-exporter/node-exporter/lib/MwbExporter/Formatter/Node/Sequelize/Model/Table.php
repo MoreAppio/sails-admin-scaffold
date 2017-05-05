@@ -187,6 +187,7 @@ class Table extends BaseTable
         $result = array();
         foreach ($this->getColumns() as $column)
         {
+          if ($column->getColumnName() !== 'id') {
             $type = $this->getFormatter()->getDatatypeConverter()->getType($column);
             $c = array();
             $c['"type"'] = $this->getJSObject(sprintf('"%s"', $type ? $type : 'STRING.BINARY'), true, true);
@@ -207,6 +208,7 @@ class Table extends BaseTable
             $layout['"label"'] = $this->getJSObject(sprintf('"%s"', $column->getColumnName()), true, true);
             $c['"layout"'] = $layout;
             array_push($result, $c);
+          }
         }
 
         return $result;
