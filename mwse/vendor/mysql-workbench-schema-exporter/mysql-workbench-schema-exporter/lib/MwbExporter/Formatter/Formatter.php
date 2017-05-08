@@ -72,7 +72,7 @@ abstract class Formatter implements FormatterInterface
         $this->name = $name;
         $this->registry = new Registry();
         $this->addConfigurations(array(
-            static::CFG_LOG_TO_CONSOLE         => false,
+            static::CFG_LOG_TO_CONSOLE         => true,
             static::CFG_LOG_FILE               => '',
             static::CFG_FILENAME               => '%entity%.%extension%',
             static::CFG_INDENTATION            => 2,
@@ -85,7 +85,7 @@ abstract class Formatter implements FormatterInterface
             static::CFG_SORT_TABLES_AND_VIEWS  => true,
             static::CFG_EXPORT_TABLE_CATEGORY  => '',
             static::CFG_ENHANCE_M2M_DETECTION  => true,
-            static::CFG_SKIP_M2M_TABLES        => true,
+            static::CFG_SKIP_M2M_TABLES        => false,
         ));
         $this->addValidators(array(
             static::CFG_EOL                    => new ChoiceValidator(array(FormatterInterface::EOL_WIN, FormatterInterface::EOL_UNIX)),

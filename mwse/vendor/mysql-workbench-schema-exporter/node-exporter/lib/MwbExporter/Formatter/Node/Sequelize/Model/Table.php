@@ -33,9 +33,15 @@ use MwbExporter\Formatter\Node\Sequelize\Formatter;
 use MwbExporter\Writer\WriterInterface;
 use MwbExporter\Object\JS;
 use MwbExporter\Helper\Comment;
+use Doctrine\Common\Inflector\Inflector;
 
 class Table extends BaseTable
 {
+
+    public function strbool($value)
+    {
+        return $value ? 'true' : 'false';
+    }
     /**
      * Get JSObject.
      *
@@ -185,16 +191,65 @@ class Table extends BaseTable
     protected function getFields()
     {
         $result = array();
+        if ($this->isManyToMany()) {
+          echo sprintf('! Table "%s" is many to many.'. "\n", $this->getRawTableName());
+          echo sprintf("\n".'! TableM2MRelations: %s.'. "\n", 
+            implode('|', $this->getTableM2MRelations())
+          );
+          foreach ($this->getTableM2MRelations() as $table) {
+            # code...
+            echo sprintf("\n".'! TableM2MRelations: %s.'. "\n", $column->getColumnName());
+          }
+          foreach ($this->getColumns() as $column) {
+            # code...
+            echo sprintf('! TableM2MRelations: %s'."\n", 
+              $this->getManyToManyRelatedName(
+                $this->getRawTableName(), 
+                $column->getColumnName()
+              )
+            );
+          }
+        }
+
         foreach ($this->getColumns() as $column)
         {
-          if ($column->getColumnName() !== 'id') {
+          if ($column->getColumnName() !== 'id' && !$column->isPrimary()) {
             $type = $this->getFormatter()->getDatatypeConverter()->getType($column);
 
             $c = array();
-            $c['"name"'] = $this->getJSObject(sprintf('"%s"', $column->getTable()->getRawTableName()), true, true);
+            $name = $column->getColumnName();
+            if (substr($name, -2) === 'id') {
+              $name = Inflector::classify($column->getColumnName());
+            }
+            $c['"name"'] = $this->getJSObject(sprintf('"%s"', $name), true, true);
             $c['"type"'] = $this->getJSObject(sprintf('"%s"', $type ? $type : 'STRING.BINARY'), true, true);
             $c['"default"'] = $this->getJSObject(sprintf('"%s"', $column->getDefaultValue()), true, true);  
             $c['"allowNull"'] = !$column->isNotNull();
+
+            echo sprintf("\n".'@ Table "%s" Key "%s"'. "\n", $column->getTable()->getRawTableName(), $name);
+
+            foreach ($column->getForeignKeys() as $value) {
+              # code...
+              echo sprintf('========='. "\n");
+              echo sprintf('@ LocalM2MRelatedName: %s, ForeignM2MRelatedName: %s'. "\n",
+                $value->getLocalM2MRelatedName(false),
+                $value->getForeignM2MRelatedName(false)
+              );
+              foreach ($value->getLocals() as $localKey) {
+                # code...
+                foreach ($value->getForeigns() as $foreign) {
+                  # code...
+                  echo sprintf('@ local key %s.%s -------> %s.%s (%s)'. "\n", 
+                    $value->getOwningTable()->getRawTableName(),
+                    $localKey->getColumnName(),
+                    $value->getReferencedTable()->getRawTableName(),
+                    $foreign->getColumnName(),
+                    $value->isManyToOne() ? 'ManyToOne' : 'Not ManyToOne'
+                  );
+                }
+              }
+              echo sprintf('========='. "\n");
+            }
 
             $layout = array();
             $layout['"label"'] = $this->getJSObject(sprintf('"%s"', $column->getColumnName()), true, true);

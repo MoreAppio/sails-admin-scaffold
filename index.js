@@ -17,6 +17,7 @@ import cp from 'child_process';
   try {
     const buildErdScript =
       `php ${filePath.mwse} --export=${exportMode[0]} ${filePath.erd} ${rootPath}`;
+    console.log('@ exec script=>', buildErdScript);
     const execBuildErd = await cp.execSync(buildErdScript);
     const textChunk = decoder.write(execBuildErd);
     console.log('@ execBuildErd result=>', textChunk);
