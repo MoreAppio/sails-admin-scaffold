@@ -136,7 +136,7 @@ interface FormatterInterface {
      * @param \SimpleXMLElement $node  The model data
      * @return \MwbExporter\Model\Table
      */
-    public function createTable(Base $parent, $node);
+    public function createTable(Base $parent, $node, $counter);
 
     /**
      * Create foreign keys model.

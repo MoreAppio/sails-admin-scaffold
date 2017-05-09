@@ -39,14 +39,16 @@ class Tables extends Base implements \ArrayAccess, \IteratorAggregate, \Countabl
 
     public function init()
     {
+        $counter = 0;
         // collect childs
         foreach ($this->node->xpath("value") as $key => $node) {
-            $table = $this->getFormatter()->createTable($this, $node);
+            $table = $this->getFormatter()->createTable($this, $node, $counter);
             // skip translation childs
             if ($table->isTranslationTable()) {
                 continue;
             }
             $this->childs[] = $table;
+            $counter += 1;
         }
         // apply sorting
         if ($this->getConfig()->get(FormatterInterface::CFG_SORT_TABLES_AND_VIEWS)) {

@@ -42,6 +42,12 @@ class Table extends BaseTable
     {
         return $value ? 'true' : 'false';
     }
+
+    protected function jsonify($value) 
+    {
+      return $this->getJSObject(sprintf('"%s"', $value), true, true);  
+    }
+
     /**
      * Get JSObject.
      *
@@ -124,43 +130,30 @@ class Table extends BaseTable
                       "crud": true,
                       "isServerSidePaging": true,
                       "queryInclude": "",
-                      "fields": %s
-                    }]', 
+                      "fields": %s,
+                      "associations": %s,
+                      "options": %s
+                    }]',
                     $this->getModelName(),
-                    $this->asModel()
+                    $this->asModel(),
+                    $this->asAssociation(),
+                    $this->asOptions()
                   ), true, true))
             ->outdent()
-            ->write("}")
-        ;
-
+            ->write("}");
         return $this;
     }
 
     // TODO
     protected function asAssociation()
-    {
-      $result = array();
-      // foreach ($this->getColumns() as $column)
-      // {
-      //     $c = array();
-      //     $pos = strpos($column->getColumnName(), "_id");
-
-      //     if ($pos !== false) {
-      //       $modelName = $column->getColumnName();
-      //       "%s."
-      //     }
-
-      //     $type = $this->getFormatter()->getDatatypeConverter()->getType($column);
-      //     $c = array();
-      //     $c['type'] = $this->getJSObject(sprintf('DataTypes.%s', $type ? $type : 'STRING.BINARY'), true, true);
-      //     if ($column->isPrimary()) {
-      //         $c['primaryKey'] = true;
-      //     }
-      //     if ($column->isAutoIncrement()) {
-      //         $c['autoIncrement'] = true;
-      //     }
-      //     $result[$column->getColumnName()] = $c;
-      // }
+    { 
+      $result = $this->getAss();
+      if (empty($result)) {
+        $result = array(
+          '"belongsTo"'=> null,
+          '"hasMany"'=> null
+        );
+      }
 
       return $this->getJSObject($result);
     }
@@ -168,11 +161,10 @@ class Table extends BaseTable
     protected function asOptions()
     {
         $result = array(
-            'timestamps' => true,
-            'underscored' => false,
-            'tableName' => $this->getRawTableName()
+            '"timestamps"' => true,
+            '"underscored"' => false,
+            '"tableName"' => $this->jsonify($this->getModelName())
         );
-
         return $this->getJSObject($result);
     }
 
@@ -183,6 +175,62 @@ class Table extends BaseTable
         return $this->getJSObject($result);
     }
 
+    protected function getAss() {
+      $result = array();
+      $belongsTo = array();
+      $hasMany = array();
+
+      if ($this->isManyToMany()) {
+        echo sprintf('! Table "%s" is many to many.'. "\n", $this->getModelName());
+        return $result;
+      }
+      foreach ($this->getForeignKeys() as $key) {
+        # code...
+        echo sprintf('! LocalM2MRelatedName: %s, ForeignM2MRelatedName: %s'. "\n",
+          $key->getLocalM2MRelatedName(),
+          $key->getForeignM2MRelatedName()
+        );
+        foreach ($key->getLocals() as $localKey) {
+          # code...
+          foreach ($key->getForeigns() as $foreign) {
+            # code...
+            echo sprintf('! local key %s.%s -------> %s.%s (%s)'. "\n", 
+              $key->getOwningTable()->getModelName(),
+              $localKey->getColumnName(),
+              $key->getReferencedTable()->getModelName(),
+              $foreign->getColumnName(),
+              $key->isManyToOne() ? 'ManyToOne' : 'Not ManyToOne'
+            );
+            if ($key->isManyToOne()) {
+              $item = $this->jsonify(
+                Inflector::classify($key->getReferencedTable()->getModelName())
+              );
+            // if (substr($name, -2) === 'id') {
+            //   $name = Inflector::classify($column->getColumnName());
+            // }
+              $hasMany = array();
+              array_push($hasMany, $item);
+            } else {
+              $item = $this->jsonify(
+                Inflector::classify($key->getReferencedTable()->getModelName())
+              );
+              array_push($belongsTo, $item);
+            }
+          }
+        }
+      }
+      if (!empty($belongsTo)) {
+        $c['"belongsTo"'] = $belongsTo;
+      }
+      if (!empty($hasMany)) {
+        $c['"hasMany"'] = $hasMany;
+      }
+      if (!empty($c)) {
+        array_push($result, $c);
+      }
+      return $c;
+    }
+
     /**
      * Get model fields.
      *
@@ -191,68 +239,28 @@ class Table extends BaseTable
     protected function getFields()
     {
         $result = array();
-        if ($this->isManyToMany()) {
-          echo sprintf('! Table "%s" is many to many.'. "\n", $this->getRawTableName());
-          echo sprintf("\n".'! TableM2MRelations: %s.'. "\n", 
-            implode('|', $this->getTableM2MRelations())
-          );
-          foreach ($this->getTableM2MRelations() as $table) {
-            # code...
-            echo sprintf("\n".'! TableM2MRelations: %s.'. "\n", $column->getColumnName());
-          }
-          foreach ($this->getColumns() as $column) {
-            # code...
-            echo sprintf('! TableM2MRelations: %s'."\n", 
-              $this->getManyToManyRelatedName(
-                $this->getRawTableName(), 
-                $column->getColumnName()
-              )
-            );
-          }
-        }
-
         foreach ($this->getColumns() as $column)
         {
-          if ($column->getColumnName() !== 'id' && !$column->isPrimary()) {
-            $type = $this->getFormatter()->getDatatypeConverter()->getType($column);
+          $firstLetter = substr($column->getColumnName(), 0, 1);
+          $last2Letters = substr($column->getColumnName(), -2);
+          $isIdField = ($column->getColumnName() == 'id' && $column->isPrimary());
+          $isRelationId = ($last2Letters == 'id' && strtoupper($firstLetter) == $firstLetter);
+          echo sprintf('! isIdField: "%s", isRelationId: "%s".'. "\n", 
+            $this->strbool(!$isIdField), 
+            $this->strbool(!$isRelationId));
 
+          if (!$isIdField && !$isRelationId) 
+          {
+            $type = $this->getFormatter()->getDatatypeConverter()->getType($column);
             $c = array();
             $name = $column->getColumnName();
-            if (substr($name, -2) === 'id') {
-              $name = Inflector::classify($column->getColumnName());
-            }
-            $c['"name"'] = $this->getJSObject(sprintf('"%s"', $name), true, true);
+            $c['"name"'] = $this->jsonify($name);
             $c['"type"'] = $this->getJSObject(sprintf('"%s"', $type ? $type : 'STRING.BINARY'), true, true);
-            $c['"default"'] = $this->getJSObject(sprintf('"%s"', $column->getDefaultValue()), true, true);  
+            $c['"default"'] = $this->jsonify($column->getDefaultValue());  
             $c['"allowNull"'] = !$column->isNotNull();
 
-            echo sprintf("\n".'@ Table "%s" Key "%s"'. "\n", $column->getTable()->getRawTableName(), $name);
-
-            foreach ($column->getForeignKeys() as $value) {
-              # code...
-              echo sprintf('========='. "\n");
-              echo sprintf('@ LocalM2MRelatedName: %s, ForeignM2MRelatedName: %s'. "\n",
-                $value->getLocalM2MRelatedName(false),
-                $value->getForeignM2MRelatedName(false)
-              );
-              foreach ($value->getLocals() as $localKey) {
-                # code...
-                foreach ($value->getForeigns() as $foreign) {
-                  # code...
-                  echo sprintf('@ local key %s.%s -------> %s.%s (%s)'. "\n", 
-                    $value->getOwningTable()->getRawTableName(),
-                    $localKey->getColumnName(),
-                    $value->getReferencedTable()->getRawTableName(),
-                    $foreign->getColumnName(),
-                    $value->isManyToOne() ? 'ManyToOne' : 'Not ManyToOne'
-                  );
-                }
-              }
-              echo sprintf('========='. "\n");
-            }
-
             $layout = array();
-            $layout['"label"'] = $this->getJSObject(sprintf('"%s"', $column->getColumnName()), true, true);
+            $layout['"label"'] = $this->jsonify($column->getColumnName());
             $c['"layout"'] = $layout;
 
             if ($column->isPrimary()) {
@@ -270,7 +278,6 @@ class Table extends BaseTable
             array_push($result, $c);
           }
         }
-
         return $result;
     }
 }

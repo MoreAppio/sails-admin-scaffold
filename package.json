@@ -29,7 +29,8 @@
     "babel-preset-stage-0": "^6.16.0",
     "ejs": "latest",
     "fs-extra": "^2.0.0",
-    "inflection": "latest"
+    "inflection": "latest",
+    "lodash": "^4.17.4"
   },
   "bugs": {
     "url": "https://github.com/mauriciogior/node-scaffold/issues"

@@ -280,9 +280,9 @@ abstract class Formatter implements FormatterInterface
      * (non-PHPdoc)
      * @see \MwbExporter\Formatter\FormatterInterface::createTable()
      */
-    public function createTable(Base $parent, $node)
+    public function createTable(Base $parent, $node, $counter)
     {
-        return new Table($parent, $node);
+        return new Table($parent, $node, $counter);
     }
 
     /**

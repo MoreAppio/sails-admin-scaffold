@@ -58,9 +58,9 @@ class Formatter extends BaseFormatter
      * (non-PHPdoc)
      * @see \MwbExporter\Formatter::createTable()
      */
-    public function createTable(Base $parent, $node)
+    public function createTable(Base $parent, $node, $counter)
     {
-        return new Model\Table($parent, $node);
+        return new Model\Table($parent, $node, $counter);
     }
 
     /**
