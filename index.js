@@ -1,3 +1,3 @@
 #!/usr/bin/env node
 
-require("./bin/erd2cargo.js");
+require("./erd2cargo.bin.js");

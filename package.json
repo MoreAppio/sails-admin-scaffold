@@ -1,15 +1,15 @@
 {
   "name": "erd-cargo-node-scaffold",
-  "version": "1.0.2",
-  "description": "A library that provides great scaffolding",
+  "version": "1.0.3",
+  "description": "MySQL workbench ERD map to Cargo CMS admin generator.",
   "main": "index.js",
   "private": true,
   "scripts": {
     "run-scaffold": "babel-node --presets es2015,stage-0 scaffold.js -c -f",
-    "run-clean": "rm -rf generated && rm -rf exported && babel-node --presets es2015,stage-0 index.js",
+    "run-clean": "rm -rf generated && rm -rf exported && babel-node --presets es2015,stage-0 erd2cargo.js",
     "start": "node_modules/babel-cli/bin/babel-node.js --presets es2015,stage-0 erd2cargo.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel ./erd2cargo.js --out-dir bin --presets es2015,stage-0",
+    "build": "babel ./erd2cargo.js --out-file ./erd2cargo.bin.js --presets es2015,stage-0",
     "prepublish": "npm run build"
   },
   "repository": {
