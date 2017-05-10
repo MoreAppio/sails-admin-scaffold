@@ -1,11 +1,12 @@
 {
-  "name": "erd-node-scaffold",
+  "name": "erd-cargo-node-scaffold",
   "version": "1.0.0",
   "description": "A library that provides great scaffolding",
   "main": "index.js",
   "scripts": {
-    "start2": "babel-node --presets es2015,stage-0 scaffold.js -c -f",
-    "start": "rm -rf generated && rm -rf exported && babel-node --presets es2015,stage-0 index.js",
+    "run-scaffold": "babel-node --presets es2015,stage-0 scaffold.js -c -f",
+    "run-clean": "rm -rf generated && rm -rf exported && babel-node --presets es2015,stage-0 index.js",
+    "start": "node_modules/babel-cli/bin/babel-node.js --presets es2015,stage-0 index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
