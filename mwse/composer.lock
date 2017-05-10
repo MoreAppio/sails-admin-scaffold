@@ -1,0 +1,205 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "10717a01bda3659787a5621fec2c2e15",
+    "packages": [],
+    "packages-dev": [
+        {
+            "name": "doctrine/inflector",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/inflector.git",
+                "reference": "90b2128806bfde671b6952ab8bea493942c1fdae"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/inflector/zipball/90b2128806bfde671b6952ab8bea493942c1fdae",
+                "reference": "90b2128806bfde671b6952ab8bea493942c1fdae",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Doctrine\\Common\\Inflector\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                }
+            ],
+            "description": "Common String Manipulations with regard to casing and singular/plural rules.",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "inflection",
+                "pluralize",
+                "singularize",
+                "string"
+            ],
+            "time": "2015-11-06T14:35:42+00:00"
+        },
+        {
+            "name": "mysql-workbench-schema-exporter/mysql-workbench-schema-exporter",
+            "version": "v3.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mysql-workbench-schema-exporter/mysql-workbench-schema-exporter.git",
+                "reference": "878745003196452d397d17881890f78a070180c5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mysql-workbench-schema-exporter/mysql-workbench-schema-exporter/zipball/878745003196452d397d17881890f78a070180c5",
+                "reference": "878745003196452d397d17881890f78a070180c5",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/inflector": "^1.0.0",
+                "php": ">=5.4.0"
+            },
+            "bin": [
+                "bin/mysql-workbench-schema-export",
+                "bin/update-sql-reserved-words"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "MwbExporter\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Johannes Mueller",
+                    "email": "circus2@web.de",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Toha",
+                    "email": "tohenk@yahoo.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Robert Vock",
+                    "email": "robertvock82@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "MySQL Workbench Schema Exporter",
+            "homepage": "https://github.com/mysql-workbench-schema-exporter/mysql-workbench-schema-exporter",
+            "keywords": [
+                "cli",
+                "database",
+                "doctrine",
+                "extjs",
+                "mysql",
+                "mysql workbench",
+                "propel",
+                "sequelizejs",
+                "zend"
+            ],
+            "time": "2017-01-17T10:49:34+00:00"
+        },
+        {
+            "name": "mysql-workbench-schema-exporter/node-exporter",
+            "version": "3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mysql-workbench-schema-exporter/node-exporter.git",
+                "reference": "94939c97a47204eaed1d22c98232332da5509d8b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mysql-workbench-schema-exporter/node-exporter/zipball/94939c97a47204eaed1d22c98232332da5509d8b",
+                "reference": "94939c97a47204eaed1d22c98232332da5509d8b",
+                "shasum": ""
+            },
+            "require": {
+                "mysql-workbench-schema-exporter/mysql-workbench-schema-exporter": "^3.0 || dev-master",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MwbExporter\\Formatter\\Node\\": "lib/MwbExporter/Formatter/Node/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Johannes Mueller",
+                    "email": "circus2@web.de",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Toha",
+                    "email": "tohenk@yahoo.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Robert Vock",
+                    "email": "robertvock82@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "MySQL Workbench Schema Exporter for Sequelizejs",
+            "homepage": "https://github.com/mysql-workbench-schema-exporter/node-exporter",
+            "keywords": [
+                "cli",
+                "database",
+                "mysql",
+                "mysql workbench",
+                "sequelizejs"
+            ],
+            "time": "2017-01-17T09:51:59+00:00"
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

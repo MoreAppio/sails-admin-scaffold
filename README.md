@@ -1,3 +1,18 @@
+
+# erd2cargo
+MySQL workbench ERD map to Cargo CMS admin generator.
+
+credits to everyone who contributed.
+
+## feature
+* auto gen model defination json from ERD.
+* auto gen relation from ERD.
+* auto gen basic view/controller/model from JSON.
+
+
+======== old stuffs ===
+
+
 # 使用方法
 ## (點我)[https://github.com/trunk-studio/cargocms/issues/1226]
 
