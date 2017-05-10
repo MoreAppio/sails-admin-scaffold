@@ -1,6 +1,6 @@
 {
   "name": "erd-cargo-node-scaffold",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A library that provides great scaffolding",
   "main": "index.js",
   "private": true,
@@ -19,6 +19,9 @@
     "express",
     "mongoose"
   ],
+  "bin": {
+    "erd2cargo": "babel-node --presets es2015,stage-0 index.js"
+  },
   "author": "Mauricio Giordano <mauricio.c.giordano@gmail.com> (http://mauriciogiordano.com/)",
   "licenses": [
     {
