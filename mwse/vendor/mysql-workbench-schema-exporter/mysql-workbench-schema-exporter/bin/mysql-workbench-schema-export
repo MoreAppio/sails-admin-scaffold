@@ -36,6 +36,7 @@ use MwbExporter\Formatter\FormatterInterface;
 
 // ----------------------------------------- CONST --------------------------------------------------- //
 
+const CMD_PARAM_CARGO_EXPORT = 'cargo-export';
 const CMD_PARAM_EXPORT       = 'export';
 const CMD_PARAM_CONFIG       = 'config';
 const CMD_OPT_SAVE_CONFIG    = 'saveconfig';
@@ -235,8 +236,10 @@ function chooseFormatter($bootstrap)
     return $keys[$choice - 1];
 }
 
-function main($filename, $dir, $params, $options)
+function main($filename, $dir, $params, $options, $cargo_dir)
 {
+
+    echo sprintf("@@@@@@@ cargo_dir '%s'.\n\n", $cargo_dir);
     showTitle();
 
     // bootstrap
@@ -278,6 +281,9 @@ function main($filename, $dir, $params, $options)
             if (isset($data['dir'])) {
                 $dir = $data['dir'];
             }
+            if (isset($data['carog_dir'])) {
+                $carog_dir = $data['carog_dir'];
+            }
             if (isset($data['params'])) {
                 $configs = $data['params'];
             }
@@ -318,8 +324,11 @@ function main($filename, $dir, $params, $options)
         file_put_contents('export.json', json_encode(
             array(
                 CMD_PARAM_EXPORT => $params[CMD_PARAM_EXPORT],
+                CMD_PARAM_CARGO_EXPORT => $params[CMD_PARAM_CARGO_EXPORT],
                 CMD_OPT_ZIP => $options[CMD_OPT_ZIP],
-                'dir' => $dir, 'params' => $setup
+                'dir' => $dir, 
+                'carog_dir' => $carog_dir,
+                'params' => $setup
             ),
             JSON_PRETTY_PRINT
         ));
@@ -330,7 +339,7 @@ function main($filename, $dir, $params, $options)
 
     // parse the mwb file
     $formatter->setup($setup);
-    $document = $bootstrap->export($formatter, $filename, $dir, $options[CMD_OPT_ZIP] ? 'zip' : 'file');
+    $document = $bootstrap->export($formatter, $filename, $dir, $options[CMD_OPT_ZIP] ? 'zip' : 'file', $cargo_dir);
 
     // end time
     $end = microtime(true);
@@ -359,6 +368,7 @@ try {
         CMD_OPT_NO_AUTO_CONFIG => false,
     );
     $params = array(
+        CMD_PARAM_CARGO_EXPORT  => null,
         CMD_PARAM_EXPORT        => null,
         CMD_PARAM_CONFIG        => null,
     );
@@ -369,7 +379,13 @@ try {
         usage();
     }
 
-    main(count($values) ? $values[0] : null, count($values) > 1 ? $values[1] : getcwd(), $params, $options);
+    main(
+      count($values) ? $values[0] : null,
+      count($values) > 1 ? $values[1] : getcwd(),
+      $params, 
+      $options, 
+      count($values) > 2 ? $values[2] : null
+    );
 
 } catch (\Exception $e) {
     echo "Error:\n";

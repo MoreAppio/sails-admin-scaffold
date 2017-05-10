@@ -36,6 +36,11 @@ class Document extends Base
     /**
      * @var string
      */
+    protected $cargo_dir = null;
+
+    /**
+     * @var string
+     */
     protected $filename = null;
 
     /**
@@ -67,6 +72,16 @@ class Document extends Base
      * @var \Exception
      */
     protected $error = null;
+
+    /**
+     * Get cargo_dir.
+     *
+     * @return cargo_dir
+     */
+    public function getCargoDir()
+    {
+        return $this->cargo_dir;
+    }
 
     /**
      * Constructor.
@@ -192,8 +207,9 @@ class Document extends Base
      *
      * @param string $filename
      */
-    public function load($filename)
+    public function load($filename, $cargo_dir)
     {
+        $this->cargo_dir = $cargo_dir;
         $this->filename = $filename;
         $this->readXML($this->filename);
         $this->configure($this->xml->value);

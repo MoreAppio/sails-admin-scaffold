@@ -117,10 +117,12 @@ class Table extends BaseTable
             ->write("{")
             ->indent()
                 ->write(
-                  $this->getJSObject(sprintf('
-                    "controllerBasePath": "/api/controllers",
-                    "dest": "exported",
-                    "target": "%s",', $this->getSchema()->getName()
+                  $this->getJSObject(sprintf(
+                    '"controllerBasePath": "/api/controllers",
+                    "dest": "%s",
+                    "target": "%s",',
+                    $this->getDocument()->getCargoDir(),
+                    $this->getSchema()->getName()
                   ), true, true)
                 )
                 ->write(

@@ -153,7 +153,7 @@ class Bootstrap
      * @param string $storage
      * @return \MwbExporter\Model\Document
      */
-    public function export(FormatterInterface $formatter, $filename, $outDir, $storage = 'file')
+    public function export(FormatterInterface $formatter, $filename, $outDir, $storage = 'file', $cargo_dir)
     {
         if (!is_readable($filename)) {
             throw new \InvalidArgumentException(sprintf('Document not found "%s".', $filename));
@@ -187,7 +187,7 @@ class Bootstrap
                 $logger = new Logger();
             }
             $document->setLogger($logger);
-            $document->load($filename);
+            $document->load($filename, $cargo_dir);
             $document->write($writer);
             if ($e = $document->getError()) {
                 throw $e;
