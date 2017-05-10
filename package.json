@@ -1,14 +1,16 @@
 {
   "name": "erd-cargo-node-scaffold",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A library that provides great scaffolding",
   "main": "index.js",
   "private": true,
   "scripts": {
     "run-scaffold": "babel-node --presets es2015,stage-0 scaffold.js -c -f",
     "run-clean": "rm -rf generated && rm -rf exported && babel-node --presets es2015,stage-0 index.js",
-    "start": "node_modules/babel-cli/bin/babel-node.js --presets es2015,stage-0 index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node_modules/babel-cli/bin/babel-node.js --presets es2015,stage-0 erd2cargo.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel ./erd2cargo.js --out-dir bin --presets es2015,stage-0",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -20,7 +22,7 @@
     "mongoose"
   ],
   "bin": {
-    "erd2cargo": "./index.js"
+    "erd2cargo": "./erd2cargo.js"
   },
   "author": "Mauricio Giordano <mauricio.c.giordano@gmail.com> (http://mauriciogiordano.com/)",
   "licenses": [
