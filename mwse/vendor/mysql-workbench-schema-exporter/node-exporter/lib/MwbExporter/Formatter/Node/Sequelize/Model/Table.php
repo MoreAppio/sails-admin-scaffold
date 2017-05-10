@@ -134,7 +134,7 @@ class Table extends BaseTable
                       "associations": %s,
                       "options": %s
                     }]',
-                    $this->getModelName(),
+                    Inflector::tableize($this->getModelName()),
                     $this->asModel(),
                     $this->asAssociation(),
                     $this->asOptions()
@@ -179,6 +179,7 @@ class Table extends BaseTable
       $result = array();
       $belongsTo = array();
       $hasMany = array();
+      $c = array();
 
       if ($this->isManyToMany()) {
         echo sprintf('! Table "%s" is many to many.'. "\n", $this->getModelName());
@@ -241,22 +242,22 @@ class Table extends BaseTable
         $result = array();
         foreach ($this->getColumns() as $column)
         {
+          $type = $this->getFormatter()->getDatatypeConverter()->getType($column);
           $firstLetter = substr($column->getColumnName(), 0, 1);
           $last2Letters = substr($column->getColumnName(), -2);
-          $isIdField = ($column->getColumnName() == 'id' && $column->isPrimary());
-          $isRelationId = ($last2Letters == 'id' && strtoupper($firstLetter) == $firstLetter);
-          echo sprintf('! isIdField: "%s", isRelationId: "%s".'. "\n", 
-            $this->strbool(!$isIdField), 
-            $this->strbool(!$isRelationId));
+          $isIdField = ($column->getColumnName() === 'id' && $column->isPrimary());
+          $isRelationId = (strtolower($last2Letters) === 'id' && strtoupper($firstLetter) == $firstLetter);
+          $isDateField = $type === 'DATE';
+          // echo sprintf('! isIdField: "%s", isRelationId: "%s".'. "\n", 
+          //   $this->strbool(!$isIdField), 
+          //   $this->strbool(!$isRelationId));
 
-          if (!$isIdField && !$isRelationId) 
+          if (!$isIdField && !$isRelationId && !$isDateField) 
           {
-            $type = $this->getFormatter()->getDatatypeConverter()->getType($column);
             $c = array();
             $name = $column->getColumnName();
             $c['"name"'] = $this->jsonify($name);
             $c['"type"'] = $this->getJSObject(sprintf('"%s"', $type ? $type : 'STRING.BINARY'), true, true);
-            $c['"default"'] = $this->jsonify($column->getDefaultValue());  
             $c['"allowNull"'] = !$column->isNotNull();
 
             $layout = array();
@@ -274,6 +275,19 @@ class Table extends BaseTable
             }
             if ($column->getLength() > 0) {
               $c['"length"'] = $column->getLength();
+            }
+            if ($column->getDefaultValue()) {
+              $isBool = $column->getDefaultValue() === 'true' || 
+                $column->getDefaultValue() === 'false';
+              if ($type === 'STRING') {
+                $defaultValue = $this->jsonify($column->getDefaultValue());
+              } else if ($type === 'INTEGER'){
+                $defaultValue = intval($column->getDefaultValue());
+              } else if ($isBool) {
+                $defaultValue = ($column->getDefaultValue() === 'true');
+              }
+              echo sprintf('! type: "%s", final DefaultValue: `%s`.'. "\n", $type, $defaultValue);
+              $c['"default"'] = $defaultValue;
             }
             array_push($result, $c);
           }
