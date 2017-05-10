@@ -20,7 +20,7 @@
     "mongoose"
   ],
   "bin": {
-    "erd2cargo": "babel-node --presets es2015,stage-0 index.js"
+    "erd2cargo": "./index.js"
   },
   "author": "Mauricio Giordano <mauricio.c.giordano@gmail.com> (http://mauriciogiordano.com/)",
   "licenses": [
