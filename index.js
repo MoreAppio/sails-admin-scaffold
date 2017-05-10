@@ -193,12 +193,13 @@ import { version } from './package.json';
       console.log('\nExample:');
       console.log('  node_modules/babel-cli/bin/babel-node.js --presets es2015,stage-0 index.js -f erd.mwb --erd-export ./erd --cargo-export ./cargo');
 
-      console.log('\nDocumentation can be found at ... well, not yet but I am sure you will find it eventually somewhere. :p');
-      console.log('\n\n');
+      console.log('\nDocumentation can be found at ... well, not yet but I am sure you will find it eventually somewhere. :p\n');
     },
 
     shell: function() {
       this.message('Please give me a file through -file! (ie. -file data.json)', ct.MSG_ERROR);
+
+      this.help();
     },
 
     version: function() {
