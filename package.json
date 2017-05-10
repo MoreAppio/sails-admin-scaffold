@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start2": "babel-node --presets es2015,stage-0 scaffold.js -c -f",
-    "start": "rm -rf exported && rm -rf generated &&  babel-node --presets es2015,stage-0 index.js",
+    "start": "rm -rf generated && rm -rf exported && babel-node --presets es2015,stage-0 index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -30,6 +30,7 @@
     "ejs": "latest",
     "fs-extra": "^2.0.0",
     "inflection": "latest",
+    "js-beautify": "^1.6.12",
     "lodash": "^4.17.4"
   },
   "bugs": {
