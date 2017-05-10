@@ -1,0 +1,56 @@
+/* SAMPLE */
+// Do exactly on this pattern!
+
+{
+    "controllerBasePath": "/api/controllers",
+    "dest": "export",
+    "target": "labfnp",
+    "models": [{
+        "name": "role_menu_item_test", // 駝峰的話要用_分格開來
+        "crud": true,
+        "isServerSidePaging": false,
+        "queryInclude": "",
+        "fields": [{
+            "name": "id",
+            "type": "int",
+            "length": "11",
+            "layout": {
+              "label": "ID"
+            }
+        }, {
+            "name": "RoleId",
+            "type": "String",
+            "length": "32",
+            "layout": {
+              "label": "權限 ID"
+            }
+        }, {
+            "name": "MenuItemId",
+            "type": "String",
+            "length": "32",
+            "layout": {
+              "label": "MenuItemId ID",
+              "hideWhenCreate": true,
+              "hideWhenEdit": true
+            }
+        }, {
+            "name": "ATMId",
+            "type": "String",
+            "length": "32",
+            "layout": {
+              "label": "ATMId ID",
+              "hideWhenCreate": true,
+              "hideWhenEdit": true
+            }
+        }, {
+            "name": "TypeId",
+            "type": "String",
+            "length": "32",
+            "layout": {
+              "label": "TypeId ID",
+              "hideWhenCreate": true,
+              "hideWhenEdit": true
+            }
+        }]
+    }]
+}

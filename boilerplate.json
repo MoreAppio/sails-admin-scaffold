@@ -1,0 +1,77 @@
+/* SAMPLE */
+// Do exactly on this pattern!
+
+{
+    "controllerBasePath": "/api/controllers",
+    "dest": "export",
+    "models": [{
+        "name": "Person", // always singular!
+        "crud": true,
+        "fields": [{
+            "name": "name",
+            "type": "String",
+            "length": "32",
+            "layout": {
+              "label": "姓名",
+              "hide": "phone,tablet"
+            }
+        }, {
+            "name": "username",
+            "type": "int",
+            "unique": true,
+            "layout": {
+              "label": "姓名",
+              "hide": "phone,tablet"
+            }
+        }, {
+            "name": "email",
+            "type": "String",
+            "unique": true,
+            "layout": {
+              "label": "Email",
+              "hide": "phone,tablet",
+              "sort": false
+            }
+        }, {
+            "name": "password",
+            "type": "String",
+            "layout": {
+              "label": "密碼",
+              "hide": "always",
+              "sort": false
+            }
+        }, {
+            "name": "age",
+            "type": "int",
+            "layout": {
+              "label": "年齡",
+              "hide": "phone,tablet",
+              "sort": false
+            }
+        }, {
+            "name": "price",
+            "type": "decimal",
+            "length": "15, 4",
+            "default": "0.0000",
+            "layout": {
+              "label": "價錢",
+              "hide": "phone,tablet"
+            }
+        }, {
+            "name": "product_name",
+            "type": "String",
+            "length": "10",
+            "unique": true,
+            "layout": {
+              "label": "商品名稱",
+              "hide": "phone,tablet"
+            }
+        }, {
+            "name": "birthday",
+            "type": "virtual",
+            "layout": {
+              "label": "生日"
+            }
+        }]
+    }]
+}

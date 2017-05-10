@@ -1,0 +1,6 @@
+{
+    "require-dev": {
+        "mysql-workbench-schema-exporter/mysql-workbench-schema-exporter": "^3.0",
+        "mysql-workbench-schema-exporter/node-exporter": "^3.0"
+    }
+}

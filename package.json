@@ -1,0 +1,47 @@
+{
+  "name": "erd-cargo-node-scaffold",
+  "version": "1.0.0",
+  "description": "A library that provides great scaffolding",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "run-scaffold": "babel-node --presets es2015,stage-0 scaffold.js -c -f",
+    "run-clean": "rm -rf generated && rm -rf exported && babel-node --presets es2015,stage-0 index.js",
+    "start": "node_modules/babel-cli/bin/babel-node.js --presets es2015,stage-0 index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mauriciogior/node-scaffold.git"
+  },
+  "keywords": [
+    "scaffold",
+    "express",
+    "mongoose"
+  ],
+  "author": "Mauricio Giordano <mauricio.c.giordano@gmail.com> (http://mauriciogiordano.com/)",
+  "licenses": [
+    {
+      "url": "https://github.com/mauriciogior/node-scaffold/blob/master/LICENSE",
+      "type": "GPL v2"
+    }
+  ],
+  "dependencies": {
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "ejs": "latest",
+    "fs-extra": "^2.0.0",
+    "inflection": "latest",
+    "js-beautify": "^1.6.12",
+    "lodash": "^4.17.4"
+  },
+  "bugs": {
+    "url": "https://github.com/mauriciogior/node-scaffold/issues"
+  },
+  "homepage": "https://github.com/mauriciogior/node-scaffold",
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-0": "^6.16.0"
+  }
+}
