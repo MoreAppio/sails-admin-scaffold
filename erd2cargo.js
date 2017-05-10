@@ -8,6 +8,8 @@ import {
 } from 'js-beautify';
 import arg from './lib/argument-parser';
 import { version } from './package.json';
+import 'babel-core/register';
+import 'babel-polyfill';
 
 (function() {
 
@@ -191,7 +193,7 @@ import { version } from './package.json';
       console.log('  -v, --version\t\t\t\t Shows the version of this tool.');
 
       console.log('\nExample:');
-      console.log('  node_modules/babel-cli/bin/babel-node.js --presets es2015,stage-0 index.js -f erd.mwb --erd-export ./erd --cargo-export ./cargo');
+      console.log('  erd2cargo -f erd.mwb --erd-export ./erd --cargo-export ./cargo');
 
       console.log('\nDocumentation can be found at ... well, not yet but I am sure you will find it eventually somewhere. :p\n');
     },
