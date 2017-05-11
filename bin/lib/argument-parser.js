@@ -12,18 +12,19 @@
 	var MODE = '--mode';
 
 	var path = require('path');
-	var appRoot = require('app-root-path').path;
+	var projRoot = require('app-root-path').path;
+	var appDir = path.dirname(require.main.filename);
 
 	var config = {
 		exportPath: {
-			erd: './export_erd',
-			cargo: './export_cargo'
+			erd: projRoot + '/export_erd',
+			cargo: projRoot + '/export_cargo'
 		},
 		erdSource: null,
 		overwrite: false,
 		help: false,
 		pathPhp: 'php',
-		pathMwse: appRoot + '/mwse/vendor/bin/mysql-workbench-schema-export',
+		pathMwse: appDir + '/mwse/vendor/bin/mysql-workbench-schema-export',
 		exportModes: ['node-sequelize', 'scaffold'],
 		mode: 'node-sequelize'
 	};
