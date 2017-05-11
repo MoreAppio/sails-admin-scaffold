@@ -12,7 +12,7 @@
 	var MODE = '--mode';
 
 	var path = require('path');
-	var appDir = path.dirname(require.main.filename);
+	var appRoot = require('app-root-path').path;
 
 	var config = {
 		exportPath: {
@@ -23,7 +23,7 @@
 		overwrite: false,
 		help: false,
 		pathPhp: 'php',
-		pathMwse: './mwse/vendor/bin/mysql-workbench-schema-export',
+		pathMwse: appRoot + '/mwse/vendor/bin/mysql-workbench-schema-export',
 		exportModes: ['node-sequelize', 'scaffold'],
 		mode: 'node-sequelize'
 	};
