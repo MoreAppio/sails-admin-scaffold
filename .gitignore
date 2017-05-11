@@ -1,3 +1,5 @@
 node_modules/
 exported/
 generated/
+export_cargo/
+export_erd/
