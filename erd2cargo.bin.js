@@ -53,45 +53,96 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                try {
-                  // console.error('this.config', this.config);
-                  this.config = _argumentParser2.default.parse(process.argv);
-                  config = this.config;
+                _context.prev = 0;
 
+                // console.error('this.config', this.config);
+                this.config = _argumentParser2.default.parse(process.argv);
+                config = this.config;
 
-                  if (config.help) {
-                    this.help();
-                  } else if (config.clean) {
-                    this.cleanFolder();
-                  } else if (config.version) {
-                    this.version();
-                  } else if (!config.file) {
-                    this.shell();
-                  } else {
-                    err = false;
-                    file = null;
-
-                    try {
-                      file = _fs2.default.readFileSync(config.file, 'utf8');
-                    } catch (e) {
-                      err = true;
-                      console.log('Couldn\'t access \'' + config.file + '\'!');
-                    }
-                    if (!err) {
-                      this.config = config;
-                      this.start();
-                    }
-                  }
-                } catch (error) {
-                  console.error(error);
+                if (!config.help) {
+                  _context.next = 7;
+                  break;
                 }
 
-              case 1:
+                this.help();
+                _context.next = 35;
+                break;
+
+              case 7:
+                if (!config.clean) {
+                  _context.next = 11;
+                  break;
+                }
+
+                this.cleanFolder();
+                _context.next = 35;
+                break;
+
+              case 11:
+                if (!config.version) {
+                  _context.next = 15;
+                  break;
+                }
+
+                this.version();
+                _context.next = 35;
+                break;
+
+              case 15:
+                if (config.file) {
+                  _context.next = 19;
+                  break;
+                }
+
+                this.shell();
+                _context.next = 35;
+                break;
+
+              case 19:
+                err = false;
+                file = null;
+                _context.prev = 21;
+                _context.next = 24;
+                return _fs2.default.readFileSync(config.file, 'utf8');
+
+              case 24:
+                file = _context.sent;
+                _context.next = 31;
+                break;
+
+              case 27:
+                _context.prev = 27;
+                _context.t0 = _context['catch'](21);
+
+                err = true;
+                console.log('Couldn\'t access \'' + config.file + '\'!');
+
+              case 31:
+                if (err) {
+                  _context.next = 35;
+                  break;
+                }
+
+                this.config = config;
+                _context.next = 35;
+                return this.start();
+
+              case 35:
+                _context.next = 40;
+                break;
+
+              case 37:
+                _context.prev = 37;
+                _context.t1 = _context['catch'](0);
+
+                console.error(_context.t1);
+
+              case 40:
               case 'end':
                 return _context.stop();
             }
           }
-        }, _callee, this);
+        }, _callee, this, [[0, 37], [21, 27]]);
       }));
 
       function parse() {

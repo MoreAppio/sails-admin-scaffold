@@ -45,14 +45,14 @@ import { version } from './package.json';
           let err = false;
           let file = null;
           try {
-            file = fs.readFileSync(config.file, 'utf8');
+            file = await fs.readFileSync(config.file, 'utf8');
           } catch (e) {
             err = true;
             console.log('Couldn\'t access \'' + config.file + '\'!');
           }
           if (!err) {
             this.config = config;
-            this.start();
+            await this.start();
           }
         }
       } catch (error) {
