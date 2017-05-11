@@ -65,18 +65,23 @@ import 'babel-polyfill';
         console.log('@ cleanFolder appDir is located=>', this.appDir);
         const isErdPathExists = await fs.existsSync(this.config.exportPath.erd);
         if (isErdPathExists) {
-          console.log(`@ cleanFolder command=>rm -rf ${this.config.exportPath.erd}`);
-          // const rmExportPath = await cp.execSync(this.conifg.exportPath);
+          const cmd = `rm -rf ${this.config.exportPath.erd}`;
+          console.log(`@ cleanFolder command=>${cmd}`);
+          const rmExportPath = await cp.execSync(cmd);
+          if (rmExportPath) console.log('@ Remove sucecssed.');
         } else {
-          console.warn('@ Default Erd export path is not exist!');
+          console.warn('@ Default ERD export path is not exist!');
         }
         const isCargoPathExists = await fs.existsSync(this.config.exportPath.cargo);
         if (isCargoPathExists) {
-          console.log(`@ cleanFolder command=>rm -rf ${this.config.exportPath.cargo}`);
-          // const rmOutputPath = await cp.execSync(`rm -rf this.conifg.outputPath`);
+          const cmd = `rm -rf ${this.config.exportPath.cargo}`;
+          console.log(`@ cleanFolder command=>${cmd}`);
+          const rmExportPath = await cp.execSync(cmd);
+          if (rmExportPath) console.log('@ Remove sucecssed.');
         } else {
-          console.warn('@ Default Cargo export path is not exist!');
+          console.warn('@ Default Cargo CMS export path is not exist!');
         }
+        await this.start();
       } catch (error) {
         console.error(error);
       }
@@ -146,7 +151,7 @@ import 'babel-polyfill';
       try {
         const modelPath = `${this.config.exportPath.cargo}/api/models`;
         const readModelDir = await fs.readdirSync(modelPath);
-        console.log('@ readDir result=>', readModelDir);
+        console.log('@ beautifyJs readDir result=>', readModelDir);
         let count = 0;
         for (const file of readModelDir) {
           const filePath = `${modelPath}/${file}`;
@@ -165,18 +170,21 @@ import 'babel-polyfill';
 
     start: async function() {
       console.info('@ Start!');
-
-      await this.exportErd();
-      await this.scaffold();
-      await appendBody(
-        `${this.config.exportPath.cargo}/config/init/menuItem/menuItem.js`,
-        data => `module.exports.menuItem = [\n${data}\n];`,
-      );
-      await appendBody(
-        `${this.config.exportPath.cargo}/config/customRoutes.js`,
-        data => `module.exports.customRoutes = {\n${data}\n};`,
-      );
-      await this.beautifyJs();
+      try {
+        await this.exportErd();
+        await this.scaffold();
+        await this.appendBody(
+          `${this.config.exportPath.cargo}/config/init/menuItem/menuItem.js`,
+          data => `module.exports.menuItem = [\n${data}\n];`,
+        );
+        await this.appendBody(
+          `${this.config.exportPath.cargo}/config/customRoutes.js`,
+          data => `module.exports.customRoutes = {\n${data}\n};`,
+        );
+        await this.beautifyJs();        
+      } catch (error) {
+        console.error(error); 
+      }
     },
 
     help: function() {
@@ -193,7 +201,7 @@ import 'babel-polyfill';
       console.log('  -v, --version\t\t\t\t Shows the version of this tool.');
 
       console.log('\nExample:');
-      console.log('  erd2cargo -f erd.mwb --erd-export ./erd --cargo-export ./cargo');
+      console.log('  erd2cargo -f erd.mwb --erd-export ./erd --cargo-export ./cargo -c');
 
       console.log('\nDocumentation can be found at ... well, not yet but I am sure you will find it eventually somewhere. :p\n');
     },

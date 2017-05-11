@@ -1,6 +1,6 @@
 {
   "name": "erd-cargo-node-scaffold",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "MySQL workbench ERD map to Cargo CMS admin generator.",
   "main": "index.js",
   "private": true,
@@ -11,7 +11,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel ./erd2cargo.js --out-file ./erd2cargo.bin.js --presets es2015,stage-0 --plugins transform-regenerator",
     "build-dir": "babel ./ --out-dir ./bin --presets es2015,stage-0 --plugins transform-regenerator --ignore node_modules",
-    "build-help": " babel --help",
+    "build-help": "babel --help",
     "prepublish": "npm run build"
   },
   "repository": {

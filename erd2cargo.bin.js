@@ -103,7 +103,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
     cleanFolder: function () {
       var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2() {
-        var isErdPathExists, isCargoPathExists;
+        var isErdPathExists, cmd, rmExportPath, isCargoPathExists, _cmd, _rmExportPath;
+
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
@@ -117,39 +118,75 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
               case 4:
                 isErdPathExists = _context2.sent;
 
-                if (isErdPathExists) {
-                  console.log('@ cleanFolder command=>rm -rf ' + this.config.exportPath.erd);
-                  // const rmExportPath = await cp.execSync(this.conifg.exportPath);
-                } else {
-                  console.warn('@ Default Erd export path is not exist!');
+                if (!isErdPathExists) {
+                  _context2.next = 14;
+                  break;
                 }
-                _context2.next = 8;
-                return _fs2.default.existsSync(this.config.exportPath.cargo);
 
-              case 8:
-                isCargoPathExists = _context2.sent;
+                cmd = 'rm -rf ' + this.config.exportPath.erd;
 
-                if (isCargoPathExists) {
-                  console.log('@ cleanFolder command=>rm -rf ' + this.config.exportPath.cargo);
-                  // const rmOutputPath = await cp.execSync(`rm -rf this.conifg.outputPath`);
-                } else {
-                  console.warn('@ Default Cargo export path is not exist!');
-                }
+                console.log('@ cleanFolder command=>' + cmd);
+                _context2.next = 10;
+                return _child_process2.default.execSync(cmd);
+
+              case 10:
+                rmExportPath = _context2.sent;
+
+                if (rmExportPath) console.log('@ Remove sucecssed.');
                 _context2.next = 15;
                 break;
 
-              case 12:
-                _context2.prev = 12;
+              case 14:
+                console.warn('@ Default ERD export path is not exist!');
+
+              case 15:
+                _context2.next = 17;
+                return _fs2.default.existsSync(this.config.exportPath.cargo);
+
+              case 17:
+                isCargoPathExists = _context2.sent;
+
+                if (!isCargoPathExists) {
+                  _context2.next = 27;
+                  break;
+                }
+
+                _cmd = 'rm -rf ' + this.config.exportPath.cargo;
+
+                console.log('@ cleanFolder command=>' + _cmd);
+                _context2.next = 23;
+                return _child_process2.default.execSync(_cmd);
+
+              case 23:
+                _rmExportPath = _context2.sent;
+
+                if (_rmExportPath) console.log('@ Remove sucecssed.');
+                _context2.next = 28;
+                break;
+
+              case 27:
+                console.warn('@ Default Cargo CMS export path is not exist!');
+
+              case 28:
+                _context2.next = 30;
+                return this.start();
+
+              case 30:
+                _context2.next = 35;
+                break;
+
+              case 32:
+                _context2.prev = 32;
                 _context2.t0 = _context2['catch'](0);
 
                 console.error(_context2.t0);
 
-              case 15:
+              case 35:
               case 'end':
                 return _context2.stop();
             }
           }
-        }, _callee2, this, [[0, 12]]);
+        }, _callee2, this, [[0, 32]]);
       }));
 
       function cleanFolder() {
@@ -405,7 +442,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
               case 4:
                 readModelDir = _context7.sent;
 
-                console.log('@ readDir result=>', readModelDir);
+                console.log('@ beautifyJs readDir result=>', readModelDir);
                 count = 0;
                 _iteratorNormalCompletion2 = true;
                 _didIteratorError2 = false;
@@ -519,36 +556,46 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
             switch (_context8.prev = _context8.next) {
               case 0:
                 console.info('@ Start!');
-
-                _context8.next = 3;
+                _context8.prev = 1;
+                _context8.next = 4;
                 return this.exportErd();
 
-              case 3:
-                _context8.next = 5;
+              case 4:
+                _context8.next = 6;
                 return this.scaffold();
 
-              case 5:
-                _context8.next = 7;
-                return appendBody(this.config.exportPath.cargo + '/config/init/menuItem/menuItem.js', function (data) {
+              case 6:
+                _context8.next = 8;
+                return this.appendBody(this.config.exportPath.cargo + '/config/init/menuItem/menuItem.js', function (data) {
                   return 'module.exports.menuItem = [\n' + data + '\n];';
                 });
 
-              case 7:
-                _context8.next = 9;
-                return appendBody(this.config.exportPath.cargo + '/config/customRoutes.js', function (data) {
+              case 8:
+                _context8.next = 10;
+                return this.appendBody(this.config.exportPath.cargo + '/config/customRoutes.js', function (data) {
                   return 'module.exports.customRoutes = {\n' + data + '\n};';
                 });
 
-              case 9:
-                _context8.next = 11;
+              case 10:
+                _context8.next = 12;
                 return this.beautifyJs();
 
-              case 11:
+              case 12:
+                _context8.next = 17;
+                break;
+
+              case 14:
+                _context8.prev = 14;
+                _context8.t0 = _context8['catch'](1);
+
+                console.error(_context8.t0);
+
+              case 17:
               case 'end':
                 return _context8.stop();
             }
           }
-        }, _callee8, this);
+        }, _callee8, this, [[1, 14]]);
       }));
 
       function start() {
