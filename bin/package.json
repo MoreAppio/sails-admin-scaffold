@@ -10,8 +10,9 @@
     "start": "node_modules/babel-cli/bin/babel-node.js --presets es2015,stage-0 erd2cargo.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel ./erd2cargo.js --out-file ./erd2cargo.bin.js --presets es2015,stage-0 --plugins transform-regenerator",
-    "build-dir": "babel ./ --out-dir ./bin --presets es2015,stage-0 --plugins transform-regenerator --ignore node_modules && ln package.json bin/package.json",
+    "build-dir": "babel ./ --out-dir ./bin --presets es2015,stage-0 --plugins transform-regenerator --ignore node_modules,bin",
     "build-help": "babel --help",
+    "link-package": "ln package.json bin/package.json",
     "prepublish": "npm run build"
   },
   "repository": {

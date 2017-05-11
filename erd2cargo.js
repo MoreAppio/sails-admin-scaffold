@@ -177,6 +177,9 @@ import { version } from './package.json';
       console.info('@ Start!');
       try {
         const exportResult = await this.exportErd() && await this.scaffold();
+        if (!exportResult) {
+          return console.error('! Export failed.');
+        }
         const codeBeautify =
           await this.appendBody(
             `${this.config.exportPath.cargo}/config/init/menuItem/menuItem.js`,
@@ -188,7 +191,7 @@ import { version } from './package.json';
           ) &&
           await this.beautifyJs();
         if (!exportResult && !codeBeautify) {
-          throw new Error('Error happened.');
+        console.error('! Code beautify failed.');
         }
       } catch (error) {
         console.error(error);

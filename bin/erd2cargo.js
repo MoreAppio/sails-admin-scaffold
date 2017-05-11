@@ -642,67 +642,71 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
               case 9:
                 exportResult = _context8.t0;
-                _context8.next = 12;
+
+                if (exportResult) {
+                  _context8.next = 12;
+                  break;
+                }
+
+                return _context8.abrupt('return', console.error('! Export failed.'));
+
+              case 12:
+                _context8.next = 14;
                 return this.appendBody(this.config.exportPath.cargo + '/config/init/menuItem/menuItem.js', function (data) {
                   return 'module.exports.menuItem = [\n' + data + '\n];';
                 });
 
-              case 12:
+              case 14:
                 _context8.t2 = _context8.sent;
 
                 if (!_context8.t2) {
-                  _context8.next = 17;
+                  _context8.next = 19;
                   break;
                 }
 
-                _context8.next = 16;
+                _context8.next = 18;
                 return this.appendBody(this.config.exportPath.cargo + '/config/customRoutes.js', function (data) {
                   return 'module.exports.customRoutes = {\n' + data + '\n};';
                 });
 
-              case 16:
+              case 18:
                 _context8.t2 = _context8.sent;
 
-              case 17:
+              case 19:
                 _context8.t1 = _context8.t2;
 
                 if (!_context8.t1) {
-                  _context8.next = 22;
+                  _context8.next = 24;
                   break;
                 }
 
-                _context8.next = 21;
+                _context8.next = 23;
                 return this.beautifyJs();
 
-              case 21:
+              case 23:
                 _context8.t1 = _context8.sent;
 
-              case 22:
+              case 24:
                 codeBeautify = _context8.t1;
 
-                if (!(!exportResult && !codeBeautify)) {
-                  _context8.next = 25;
-                  break;
+                if (!exportResult && !codeBeautify) {
+                  console.error('! Code beautify failed.');
                 }
-
-                throw new Error('Error happened.');
-
-              case 25:
-                _context8.next = 30;
+                _context8.next = 31;
                 break;
 
-              case 27:
-                _context8.prev = 27;
+              case 28:
+                _context8.prev = 28;
                 _context8.t3 = _context8['catch'](1);
 
                 console.error(_context8.t3);
 
-              case 30:
+              case 31:
               case 'end':
                 return _context8.stop();
             }
           }
-        }, _callee8, this, [[1, 27]]);
+        }, _callee8, this, [[1, 28]]);
       }));
 
       function start() {
