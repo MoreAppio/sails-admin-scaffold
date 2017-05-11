@@ -48,7 +48,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
     parse: function () {
       var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
-        var config, err, file;
+        var config, err, file, exist;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -65,7 +65,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 }
 
                 this.help();
-                _context.next = 35;
+                _context.next = 39;
                 break;
 
               case 7:
@@ -75,7 +75,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 }
 
                 this.cleanFolder();
-                _context.next = 35;
+                _context.next = 39;
                 break;
 
               case 11:
@@ -85,7 +85,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 }
 
                 this.version();
-                _context.next = 35;
+                _context.next = 39;
                 break;
 
               case 15:
@@ -95,7 +95,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 }
 
                 this.shell();
-                _context.next = 35;
+                _context.next = 39;
                 break;
 
               case 19:
@@ -103,46 +103,59 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 file = null;
                 _context.prev = 21;
                 _context.next = 24;
-                return _fs2.default.readFileSync(config.file, 'utf8');
+                return _fs2.default.existsSync(config.file);
 
               case 24:
+                exist = _context.sent;
+
+                if (!exist) {
+                  _context.next = 29;
+                  break;
+                }
+
+                _context.next = 28;
+                return _fs2.default.readFileSync(config.file, 'utf8');
+
+              case 28:
                 file = _context.sent;
-                _context.next = 31;
+
+              case 29:
+                _context.next = 35;
                 break;
 
-              case 27:
-                _context.prev = 27;
+              case 31:
+                _context.prev = 31;
                 _context.t0 = _context['catch'](21);
 
                 err = true;
                 console.log('Couldn\'t access \'' + config.file + '\'!');
 
-              case 31:
+              case 35:
                 if (err) {
-                  _context.next = 35;
+                  _context.next = 39;
                   break;
                 }
 
                 this.config = config;
-                _context.next = 35;
+                _context.next = 39;
                 return this.start();
 
-              case 35:
-                _context.next = 40;
+              case 39:
+                _context.next = 44;
                 break;
 
-              case 37:
-                _context.prev = 37;
+              case 41:
+                _context.prev = 41;
                 _context.t1 = _context['catch'](0);
 
                 console.error(_context.t1);
 
-              case 40:
+              case 44:
               case 'end':
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 37], [21, 27]]);
+        }, _callee, this, [[0, 41], [21, 31]]);
       }));
 
       function parse() {

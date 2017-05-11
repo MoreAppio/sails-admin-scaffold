@@ -45,7 +45,10 @@ import { version } from './package.json';
           let err = false;
           let file = null;
           try {
-            file = await fs.readFileSync(config.file, 'utf8');
+            const exist = await fs.existsSync(config.file);
+            if (exist) {
+              file = await fs.readFileSync(config.file, 'utf8');
+            }
           } catch (e) {
             err = true;
             console.log('Couldn\'t access \'' + config.file + '\'!');
