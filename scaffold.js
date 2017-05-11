@@ -168,7 +168,7 @@ import inflection from 'inflection';
           }
           count++;
         }
-        console.log('@ scaffold succeeded.');
+        this.message('Scaffold succeeded.', ct.MSG_SUCCESS);
       } catch (e) {
 			  this.message(e, ct.MSG_ERROR);
       }

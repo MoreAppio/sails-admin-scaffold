@@ -105,7 +105,7 @@ import { version } from './package.json';
 
         const execBuildErd = await cp.execSync(buildErdScript);
         const textChunk = this.decoder.write(execBuildErd);
-        // console.log('@ execBuildErd result=>', textChunk);
+        console.log(`@ exportErd result==>${textChunk}.`);
         return true;
       } catch (error) {
         // throw new Error(error);
@@ -123,13 +123,13 @@ import { version } from './package.json';
         }
 
         const readRawDir = await fs.readdirSync(erdExportPath);
-        console.log('@ readDir result=>', readRawDir);
+        console.log('@ Models will be export to Cargo CMS=>', readRawDir, '.\n');
 
         let rawCount = 0;
         for (const file of readRawDir) {
           rawCount++;
           if (file.includes('.bak')) {
-            console.warn(`! Skipped ${file} because it is a .bak file.`);
+            console.warn(`! Skipped ${file} because it is a .bak file.\n.`);
             continue;
           }
           console.log(`@ ${rawCount}/${readRawDir.length} file name=> ${file}`);
@@ -137,7 +137,7 @@ import { version } from './package.json';
           const execScaffold = `${babelNode} --presets es2015,stage-0 scaffold.js -f ${erdExportPath}/${file}`;
           const result = await cp.execSync(execScaffold);
           const textChunk = this.decoder.write(result);
-          if (result) console.log(`@ execSync scaffold result=>\n${textChunk}`);
+          if (result) console.log(`@ export scaffold result==>\n${textChunk}.`);
         }
         return true;
       } catch (error) {
@@ -156,6 +156,7 @@ import { version } from './package.json';
           const dataWithBody = format(data);
           const dataWithFix = beautify(dataWithBody, { indent_size: 2 });
           await fs.writeFileSync(target, dataWithFix);
+          this.message(`AppendBody to '${target}' successed.`, ct.MSG_SUCCESS);
         } else {
           console.warn(`@ Target ${target} is not exist so skip to beautify.`);
         }
@@ -171,7 +172,7 @@ import { version } from './package.json';
       try {
         const modelPath = `${this.config.exportPath.cargo}/api/models`;
         const readModelDir = await fs.readdirSync(modelPath);
-        console.log('@ beautifyJs readDir result=>', readModelDir);
+        console.log('@ Model Js files will be beautify=>', readModelDir);
         let count = 0;
         for (const file of readModelDir) {
           const filePath = `${modelPath}/${file}`;
@@ -182,6 +183,7 @@ import { version } from './package.json';
             await fs.writeFileSync(filePath, dataWithFix);
           });
         }
+        this.message(`Beautify files in folder '${modelPath}' successed.`, ct.MSG_SUCCESS);
         return true;
       } catch (error) {
         this.message(error, ct.MSG_ERROR);
@@ -246,13 +248,13 @@ import { version } from './package.json';
 
     message: function(message, type) {
       if (type == ct.MSG_ERROR) {
-        console.log('\x1b[1;97;101m%s\x1b[0m %s', '! ERROR: ', message);
+        console.log('\x1b[1;97;101m%s\x1b[0m %s', '!ERROR!', message);
       } else if (type == ct.MSG_WARNING) {
-        console.log('\x1b[1;41;103m%s\x1b[0m %s', '!WARNING: ', message);
+        console.log('\x1b[1;41;103m%s\x1b[0m %s', '!WARNING!', message);
       } else if (type == ct.MSG_SUCCESS) {
-        console.log('\x1b[1;97;42m%s\x1b[0m %s', '- SUCCESS: ', message);
+        console.log('\x1b[1;97;42m%s\x1b[0m %s', ' SUCCESS ', message);
       } else if (type == ct.MSG_FAILED) {
-        console.log('\x1b[1;97;101m%s\x1b[0m %s', '!FAIL: ', message);
+        console.log('\x1b[1;97;101m%s\x1b[0m %s', '!FAIL!', message);
       }
     },
 

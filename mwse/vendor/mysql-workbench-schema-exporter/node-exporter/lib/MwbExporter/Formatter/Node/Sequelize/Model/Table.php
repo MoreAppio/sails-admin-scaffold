@@ -249,7 +249,7 @@ class Table extends BaseTable
           $last2Letters = substr($column->getColumnName(), -2);
           $isIdField = ($column->getColumnName() === 'id' && $column->isPrimary());
           $isRelationId = (strtolower($last2Letters) === 'id' && strtoupper($firstLetter) == $firstLetter);
-          $isDateField = $type === 'DATE';
+          $isDateField = (strtolower($last2Letters) === 'at' && $type === 'DATE');
           // echo sprintf('! isIdField: "%s", isRelationId: "%s".'. "\n", 
           //   $this->strbool(!$isIdField), 
           //   $this->strbool(!$isRelationId));
