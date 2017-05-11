@@ -1,5 +1,9 @@
 'use strict';
 
+require('babel-core/register');
+
+require('babel-polyfill');
+
 var _fs = require('fs');
 
 var _fs2 = _interopRequireDefault(_fs);
@@ -21,10 +25,6 @@ var _argumentParser = require('./lib/argument-parser');
 var _argumentParser2 = _interopRequireDefault(_argumentParser);
 
 var _package = require('./package.json');
-
-require('babel-core/register');
-
-require('babel-polyfill');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -245,7 +245,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
     scaffold: function () {
       var _ref4 = _asyncToGenerator(regeneratorRuntime.mark(function _callee4() {
-        var erdExportPath, readRawDir, rawCount, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, file, babelNode, execScaffold, result, textChunk;
+        var erdExportPath, exist, readRawDir, rawCount, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, file, babelNode, execScaffold, result, textChunk;
 
         return regeneratorRuntime.wrap(function _callee4$(_context4) {
           while (1) {
@@ -254,9 +254,23 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 _context4.prev = 0;
                 erdExportPath = this.config.exportPath.erd;
                 _context4.next = 4;
-                return _fs2.default.readdirSync(erdExportPath);
+                return _fs2.default.existsSync(erdExportPath);
 
               case 4:
+                exist = _context4.sent;
+
+                if (exist) {
+                  _context4.next = 7;
+                  break;
+                }
+
+                return _context4.abrupt('return', console.error('No folder \'' + erdExportPath + '\' exists.'));
+
+              case 7:
+                _context4.next = 9;
+                return _fs2.default.readdirSync(erdExportPath);
+
+              case 9:
                 readRawDir = _context4.sent;
 
                 console.log('@ readDir result=>', readRawDir);
@@ -265,12 +279,12 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 _iteratorNormalCompletion = true;
                 _didIteratorError = false;
                 _iteratorError = undefined;
-                _context4.prev = 10;
+                _context4.prev = 15;
                 _iterator = readRawDir[Symbol.iterator]();
 
-              case 12:
+              case 17:
                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                  _context4.next = 29;
+                  _context4.next = 34;
                   break;
                 }
 
@@ -279,82 +293,82 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 rawCount++;
 
                 if (!file.includes('.bak')) {
-                  _context4.next = 18;
+                  _context4.next = 23;
                   break;
                 }
 
                 console.warn('! Skipped ' + file + ' because it is a .bak file.');
-                return _context4.abrupt('continue', 26);
+                return _context4.abrupt('continue', 31);
 
-              case 18:
+              case 23:
                 console.log('@ ' + rawCount + '/' + readRawDir.length + ' file name=> ' + file);
                 babelNode = 'node_modules/babel-cli/bin/babel-node.js';
                 execScaffold = babelNode + ' --presets es2015,stage-0 scaffold.js -f ' + erdExportPath + '/' + file;
-                _context4.next = 23;
+                _context4.next = 28;
                 return _child_process2.default.execSync(execScaffold);
 
-              case 23:
+              case 28:
                 result = _context4.sent;
                 textChunk = this.decoder.write(result);
 
                 if (result) console.log('@ execSync result=>\n', textChunk);
 
-              case 26:
-                _iteratorNormalCompletion = true;
-                _context4.next = 12;
-                break;
-
-              case 29:
-                _context4.next = 35;
-                break;
-
               case 31:
-                _context4.prev = 31;
-                _context4.t0 = _context4['catch'](10);
+                _iteratorNormalCompletion = true;
+                _context4.next = 17;
+                break;
+
+              case 34:
+                _context4.next = 40;
+                break;
+
+              case 36:
+                _context4.prev = 36;
+                _context4.t0 = _context4['catch'](15);
                 _didIteratorError = true;
                 _iteratorError = _context4.t0;
 
-              case 35:
-                _context4.prev = 35;
-                _context4.prev = 36;
+              case 40:
+                _context4.prev = 40;
+                _context4.prev = 41;
 
                 if (!_iteratorNormalCompletion && _iterator.return) {
                   _iterator.return();
                 }
 
-              case 38:
-                _context4.prev = 38;
+              case 43:
+                _context4.prev = 43;
 
                 if (!_didIteratorError) {
-                  _context4.next = 41;
+                  _context4.next = 46;
                   break;
                 }
 
                 throw _iteratorError;
 
-              case 41:
-                return _context4.finish(38);
+              case 46:
+                return _context4.finish(43);
 
-              case 42:
-                return _context4.finish(35);
+              case 47:
+                return _context4.finish(40);
 
-              case 43:
-                _context4.next = 48;
+              case 48:
+                _context4.next = 53;
                 break;
 
-              case 45:
-                _context4.prev = 45;
+              case 50:
+                _context4.prev = 50;
                 _context4.t1 = _context4['catch'](0);
 
                 // throw new Error(error);
                 console.error(_context4.t1);
 
-              case 48:
+              case 53:
               case 'end':
                 return _context4.stop();
             }
           }
-        }, _callee4, this, [[0, 45], [10, 31, 35, 43], [36,, 38, 42]]);
+        }, _callee4, this, [[0, 50], [15, 36, 40, 48], [41,, 43, 47]]);
       }));
 
       function scaffold() {
@@ -551,6 +565,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
     start: function () {
       var _ref8 = _asyncToGenerator(regeneratorRuntime.mark(function _callee8() {
+        var exportResult, codeBeautify;
         return regeneratorRuntime.wrap(function _callee8$(_context8) {
           while (1) {
             switch (_context8.prev = _context8.next) {
@@ -561,41 +576,82 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 return this.exportErd();
 
               case 4:
-                _context8.next = 6;
+                _context8.t0 = _context8.sent;
+
+                if (!_context8.t0) {
+                  _context8.next = 9;
+                  break;
+                }
+
+                _context8.next = 8;
                 return this.scaffold();
 
-              case 6:
-                _context8.next = 8;
+              case 8:
+                _context8.t0 = _context8.sent;
+
+              case 9:
+                exportResult = _context8.t0;
+                _context8.next = 12;
                 return this.appendBody(this.config.exportPath.cargo + '/config/init/menuItem/menuItem.js', function (data) {
                   return 'module.exports.menuItem = [\n' + data + '\n];';
                 });
 
-              case 8:
-                _context8.next = 10;
+              case 12:
+                _context8.t2 = _context8.sent;
+
+                if (!_context8.t2) {
+                  _context8.next = 17;
+                  break;
+                }
+
+                _context8.next = 16;
                 return this.appendBody(this.config.exportPath.cargo + '/config/customRoutes.js', function (data) {
                   return 'module.exports.customRoutes = {\n' + data + '\n};';
                 });
 
-              case 10:
-                _context8.next = 12;
-                return this.beautifyJs();
-
-              case 12:
-                _context8.next = 17;
-                break;
-
-              case 14:
-                _context8.prev = 14;
-                _context8.t0 = _context8['catch'](1);
-
-                console.error(_context8.t0);
+              case 16:
+                _context8.t2 = _context8.sent;
 
               case 17:
+                _context8.t1 = _context8.t2;
+
+                if (!_context8.t1) {
+                  _context8.next = 22;
+                  break;
+                }
+
+                _context8.next = 21;
+                return this.beautifyJs();
+
+              case 21:
+                _context8.t1 = _context8.sent;
+
+              case 22:
+                codeBeautify = _context8.t1;
+
+                if (!(!exportResult && !codeBeautify)) {
+                  _context8.next = 25;
+                  break;
+                }
+
+                throw new Error('Error happened.');
+
+              case 25:
+                _context8.next = 30;
+                break;
+
+              case 27:
+                _context8.prev = 27;
+                _context8.t3 = _context8['catch'](1);
+
+                console.error(_context8.t3);
+
+              case 30:
               case 'end':
                 return _context8.stop();
             }
           }
-        }, _callee8, this, [[1, 14]]);
+        }, _callee8, this, [[1, 27]]);
       }));
 
       function start() {
@@ -609,9 +665,9 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
       console.log('\nUsage: node xx.js [options argument]\n');
       console.log('Options:');
 
-      console.log('  -ce, --cargo-export [folderPath]\t Target a specific folder path for export ERD json to Cargo CMS. (default: `${appDir}/export_cargo`).');
-      console.log('  -ee, --erd-export [folderPath]\t Target a specific folder path for export ERD to json. (default: `${appDir}/export_erd`).');
-      console.log('  -m, --mode [specific_mode]\t\t Select a specific mode.');
+      console.log('  -ce, --cargo-export [path]\t Target a specific folder path for export ERD json to Cargo CMS. (default: `./export_cargo`).');
+      console.log('  -ee, --erd-export [path]\t Target a specific folder path for export ERD to json. (default: `./export_erd`).');
+      console.log('  -m, --mode [modeName]\t\t Select a specific mode.');
       console.log('  -f, --file [filepath]\t\t\t File to read (required).');
       console.log('  -p, --php [filepath]\t\t\t Target a specific PHP exec path.');
       console.log('  -F, --force-overwrite\t\t\t Force overwrite of existing files.');
@@ -619,7 +675,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
       console.log('  -v, --version\t\t\t\t Shows the version of this tool.');
 
       console.log('\nExample:');
-      console.log('  erd2cargo -f erd.mwb --erd-export ./erd --cargo-export ./cargo');
+      console.log('  erd2cargo -f erd.mwb --erd-export ./erd --cargo-export ./cargo --clean');
 
       console.log('\nDocumentation can be found at ... well, not yet but I am sure you will find it eventually somewhere. :p\n');
     },
