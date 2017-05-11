@@ -1,28 +1,9 @@
 'use strict';
 
-var _dissectController = require('./lib/dissect-controller');
-
-var _dissectController2 = _interopRequireDefault(_dissectController);
-
-var _dissectView = require('./lib/dissect-view');
-
-var _dissectView2 = _interopRequireDefault(_dissectView);
-
-var _dissectModel = require('./lib/dissect-model');
-
-var _dissectModel2 = _interopRequireDefault(_dissectModel);
-
-var _dissectConfig = require('./lib/dissect-config');
-
-var _dissectConfig2 = _interopRequireDefault(_dissectConfig);
-
-var _inflection = require('inflection');
-
-var _inflection2 = _interopRequireDefault(_inflection);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
+require('babel-core/register');
+require('babel-polyfill');
 
 (function () {
 	// Extensions
@@ -31,7 +12,12 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 	    JSONcleaner = require('./lib/comment-cut-out'),
 	    normalize = require('./lib/normalize'),
 	    fse = require('fs-extra'),
-	    path = require('path');
+	    path = require('path'),
+	    dissectController = require('./lib/dissect-controller'),
+	    dissectView = require('./lib/dissect-view'),
+	    dissectModel = require('./lib/dissect-model'),
+	    dissectConfig = require('./lib/dissect-config'),
+	    inflection = require('inflection');
 
 	// Constants
 	var ct = require('./lib/constants');
@@ -139,7 +125,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 								fileName = file.replace('.js', '');
 
 								model.name = model.name.trim().replace('__', '_');
-								name = _inflection2.default.classify(model.name, false);
+								name = inflection.classify(model.name, false);
 								// console.warn('@ fileName=>', fileName, ', model name=>', name);
 
 								if (!(fileName.toLowerCase() === name.toLowerCase())) {
@@ -279,7 +265,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 								}
 
 								_context2.next = 28;
-								return _dissectController2.default.dissect({
+								return dissectController.dissect({
 									scaffold: this,
 									model: model,
 									config: json
@@ -287,7 +273,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 							case 28:
 								_context2.next = 30;
-								return _dissectView2.default.dissect({
+								return dissectView.dissect({
 									scaffold: this,
 									model: model,
 									config: json
@@ -295,7 +281,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 							case 30:
 								_context2.next = 32;
-								return _dissectModel2.default.dissect({
+								return dissectModel.dissect({
 									scaffold: this,
 									model: model,
 									config: json
@@ -303,7 +289,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 							case 32:
 								_context2.next = 34;
-								return _dissectConfig2.default.dissect({
+								return dissectConfig.dissect({
 									scaffold: this,
 									model: model,
 									config: json,

@@ -347,7 +347,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
     scaffold: function () {
       var _ref5 = _asyncToGenerator(regeneratorRuntime.mark(function _callee5() {
-        var erdExportPath, exist, readRawDir, rawCount, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, file, babelNode, execScaffold, result, textChunk;
+        var erdExportPath, exist, readRawDir, rawCount, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, file, babelNode, appRoot, execScaffold, result, textChunk;
 
         return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
@@ -386,7 +386,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
               case 17:
                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                  _context5.next = 34;
+                  _context5.next = 35;
                   break;
                 }
 
@@ -400,77 +400,78 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 }
 
                 console.warn('! Skipped ' + file + ' because it is a .bak file.\n.');
-                return _context5.abrupt('continue', 31);
+                return _context5.abrupt('continue', 32);
 
               case 23:
                 console.log('@ ' + rawCount + '/' + readRawDir.length + ' file name=> ' + file);
-                babelNode = 'node_modules/babel-cli/bin/babel-node.js';
-                execScaffold = babelNode + ' --presets es2015,stage-0 scaffold.js -f ' + erdExportPath + '/' + file;
-                _context5.next = 28;
+                babelNode = typeof projRoot !== 'undefined' ? 'node' : 'node_modules/babel-cli/bin/babel-node.js';
+                appRoot = typeof projRoot !== 'undefined' ? projRoot : '.';
+                execScaffold = babelNode + ' ' + appRoot + '/scaffold.js -f ' + erdExportPath + '/' + file;
+                _context5.next = 29;
                 return _child_process2.default.execSync(execScaffold);
 
-              case 28:
+              case 29:
                 result = _context5.sent;
                 textChunk = this.decoder.write(result);
 
                 if (result) console.log('@ export scaffold result==>\n' + textChunk + '.');
 
-              case 31:
+              case 32:
                 _iteratorNormalCompletion = true;
                 _context5.next = 17;
                 break;
 
-              case 34:
-                _context5.next = 40;
+              case 35:
+                _context5.next = 41;
                 break;
 
-              case 36:
-                _context5.prev = 36;
+              case 37:
+                _context5.prev = 37;
                 _context5.t0 = _context5['catch'](15);
                 _didIteratorError = true;
                 _iteratorError = _context5.t0;
 
-              case 40:
-                _context5.prev = 40;
+              case 41:
                 _context5.prev = 41;
+                _context5.prev = 42;
 
                 if (!_iteratorNormalCompletion && _iterator.return) {
                   _iterator.return();
                 }
 
-              case 43:
-                _context5.prev = 43;
+              case 44:
+                _context5.prev = 44;
 
                 if (!_didIteratorError) {
-                  _context5.next = 46;
+                  _context5.next = 47;
                   break;
                 }
 
                 throw _iteratorError;
 
-              case 46:
-                return _context5.finish(43);
-
               case 47:
-                return _context5.finish(40);
+                return _context5.finish(44);
 
               case 48:
+                return _context5.finish(41);
+
+              case 49:
                 return _context5.abrupt('return', true);
 
-              case 51:
-                _context5.prev = 51;
+              case 52:
+                _context5.prev = 52;
                 _context5.t1 = _context5['catch'](0);
 
                 // throw new Error(error);
                 this.message(_context5.t1, ct.MSG_ERROR);
                 return _context5.abrupt('return', false);
 
-              case 55:
+              case 56:
               case 'end':
                 return _context5.stop();
             }
           }
-        }, _callee5, this, [[0, 51], [15, 36, 40, 48], [41,, 43, 47]]);
+        }, _callee5, this, [[0, 52], [15, 37, 41, 49], [42,, 44, 48]]);
       }));
 
       function scaffold() {
@@ -561,12 +562,12 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
               case 4:
                 readModelDir = _context8.sent;
 
-                console.log('@ Model Js files will be beautify=>', readModelDir);
+                // console.log('@ Model Js files will be beautify=>', readModelDir);
                 count = 0;
                 _iteratorNormalCompletion2 = true;
                 _didIteratorError2 = false;
                 _iteratorError2 = undefined;
-                _context8.prev = 10;
+                _context8.prev = 9;
 
                 _loop = function _loop() {
                   var file = _step2.value;
@@ -610,56 +611,56 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 for (_iterator2 = readModelDir[Symbol.iterator](); !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
                   _loop();
                 }
-                _context8.next = 19;
+                _context8.next = 18;
                 break;
 
-              case 15:
-                _context8.prev = 15;
-                _context8.t0 = _context8['catch'](10);
+              case 14:
+                _context8.prev = 14;
+                _context8.t0 = _context8['catch'](9);
                 _didIteratorError2 = true;
                 _iteratorError2 = _context8.t0;
 
-              case 19:
+              case 18:
+                _context8.prev = 18;
                 _context8.prev = 19;
-                _context8.prev = 20;
 
                 if (!_iteratorNormalCompletion2 && _iterator2.return) {
                   _iterator2.return();
                 }
 
-              case 22:
-                _context8.prev = 22;
+              case 21:
+                _context8.prev = 21;
 
                 if (!_didIteratorError2) {
-                  _context8.next = 25;
+                  _context8.next = 24;
                   break;
                 }
 
                 throw _iteratorError2;
 
+              case 24:
+                return _context8.finish(21);
+
               case 25:
-                return _context8.finish(22);
+                return _context8.finish(18);
 
               case 26:
-                return _context8.finish(19);
-
-              case 27:
                 this.message('Beautify files in folder \'' + modelPath + '\' successed.', ct.MSG_SUCCESS);
                 return _context8.abrupt('return', true);
 
-              case 31:
-                _context8.prev = 31;
+              case 30:
+                _context8.prev = 30;
                 _context8.t1 = _context8['catch'](0);
 
                 this.message(_context8.t1, ct.MSG_ERROR);
                 return _context8.abrupt('return', false);
 
-              case 35:
+              case 34:
               case 'end':
                 return _context8.stop();
             }
           }
-        }, _callee8, this, [[0, 31], [10, 15, 19, 27], [20,, 22, 26]]);
+        }, _callee8, this, [[0, 30], [9, 14, 18, 26], [19,, 21, 25]]);
       }));
 
       function beautifyJs(_x3) {

@@ -8,7 +8,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
       ejs = require('ejs'),
       inflection = require('inflection'),
       fse = require('fs-extra'),
-      path = require('path');
+      path = require('path'),
+      appRoot = require('app-root-path').path;
 
   var DissectController = function DissectController(scaffold, model, config) {
     try {
@@ -77,7 +78,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.prev = 0;
-                filePath = path.join(__dirname, '/tmpl/defaultAdminController.ejs');
+                filePath = path.join(appRoot, '/tmpl/defaultAdminController.ejs');
                 _context2.next = 4;
                 return fs.readFileSync(filePath, 'utf8');
 
@@ -130,7 +131,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
             switch (_context3.prev = _context3.next) {
               case 0:
                 _context3.prev = 0;
-                filePath = path.join(__dirname, '/tmpl/defaultAdminApiController.ejs');
+                filePath = path.join(appRoot, '/tmpl/defaultAdminApiController.ejs');
                 _context3.next = 4;
                 return fs.readFileSync(filePath, 'utf8');
 

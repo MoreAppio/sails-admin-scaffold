@@ -10,7 +10,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
       ejs = require('ejs'),
       inflection = require('inflection'),
       fse = require('fs-extra'),
-      path = require('path');
+      path = require('path'),
+      appRoot = require('app-root-path').path;
 
   var DissectController = function DissectController(scaffold, model, config) {
     try {
@@ -111,7 +112,9 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.prev = 0;
-                filePath = path.join(__dirname, '/tmpl/view/vue.ejs');
+                filePath = path.join(appRoot, '/tmpl/view/vue.ejs');
+                // const filePath = path.join('./tmpl/view/vue.ejs');
+
                 _context2.next = 4;
                 return fs.readFileSync(filePath, 'utf8');
 
@@ -164,7 +167,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
             switch (_context3.prev = _context3.next) {
               case 0:
                 _context3.prev = 0;
-                filePath = path.join(__dirname, '/tmpl/view/show.ejs');
+                filePath = path.join(appRoot, '/tmpl/view/show.ejs');
                 _context3.next = 4;
                 return fs.existsSync(exportFilePath);
 
@@ -211,7 +214,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
             switch (_context4.prev = _context4.next) {
               case 0:
                 _context4.prev = 0;
-                filePath = path.join(__dirname, '/tmpl/view/create.ejs');
+                filePath = path.join(appRoot, './tmpl/view/create.ejs');
                 _context4.next = 4;
                 return fs.existsSync(exportFilePath);
 
@@ -258,7 +261,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
             switch (_context5.prev = _context5.next) {
               case 0:
                 _context5.prev = 0;
-                filePath = path.join(__dirname, '/tmpl/view/edit.ejs');
+                filePath = path.join(appRoot, '/tmpl/view/edit.ejs');
                 _context5.next = 4;
                 return fs.existsSync(exportFilePath);
 
@@ -305,7 +308,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
             switch (_context6.prev = _context6.next) {
               case 0:
                 _context6.prev = 0;
-                filePath = path.join(__dirname, '/tmpl/view/index.ejs');
+                filePath = path.join(appRoot, '/tmpl/view/index.ejs');
                 _context6.next = 4;
                 return fs.readFileSync(filePath, 'utf8');
 
@@ -358,7 +361,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
             switch (_context7.prev = _context7.next) {
               case 0:
                 _context7.prev = 0;
-                filePath = path.join(__dirname, '/tmpl/view/form.ejs');
+                filePath = path.join(appRoot, '/tmpl/view/form.ejs');
                 _context7.next = 4;
                 return fs.readFileSync(filePath, 'utf8');
 

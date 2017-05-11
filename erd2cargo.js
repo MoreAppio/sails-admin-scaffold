@@ -133,8 +133,10 @@ import { version } from './package.json';
             continue;
           }
           console.log(`@ ${rawCount}/${readRawDir.length} file name=> ${file}`);
-          const babelNode = 'node_modules/babel-cli/bin/babel-node.js';
-          const execScaffold = `${babelNode} --presets es2015,stage-0 scaffold.js -f ${erdExportPath}/${file}`;
+          const babelNode = typeof projRoot !== 'undefined' ? 
+            'node' : 'node_modules/babel-cli/bin/babel-node.js';
+          const appRoot = typeof projRoot !== 'undefined' ? projRoot : '.';
+          const execScaffold = `${babelNode} ${appRoot}/scaffold.js -f ${erdExportPath}/${file}`;
           const result = await cp.execSync(execScaffold);
           const textChunk = this.decoder.write(result);
           if (result) console.log(`@ export scaffold result==>\n${textChunk}.`);
@@ -172,7 +174,7 @@ import { version } from './package.json';
       try {
         const modelPath = `${this.config.exportPath.cargo}/api/models`;
         const readModelDir = await fs.readdirSync(modelPath);
-        console.log('@ Model Js files will be beautify=>', readModelDir);
+        // console.log('@ Model Js files will be beautify=>', readModelDir);
         let count = 0;
         for (const file of readModelDir) {
           const filePath = `${modelPath}/${file}`;

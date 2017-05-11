@@ -8,7 +8,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
       ejs = require('ejs'),
       inflection = require('inflection'),
       fse = require('fs-extra'),
-      path = require('path');
+      path = require('path'),
+      appRoot = require('app-root-path').path;
 
   var DissectController = function DissectController(scaffold, model, config, index) {
     try {
@@ -79,7 +80,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.prev = 0;
-                filePath = path.join(__dirname, '/tmpl/routes.ejs');
+                filePath = path.join(appRoot, '/tmpl/routes.ejs');
                 _context2.next = 4;
                 return fs.readFileSync(filePath, 'utf8');
 
@@ -138,24 +139,24 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
     exportMenuItem: function () {
       var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee3(exportFilePath) {
-        var isExist, filePath, str, buffer;
+        var filePath, str, buffer, isExist;
         return regeneratorRuntime.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
                 _context3.prev = 0;
-                _context3.next = 3;
-                return fs.existsSync(exportFilePath);
-
-              case 3:
-                isExist = _context3.sent;
-                filePath = path.join(__dirname, '/tmpl/menuItem.ejs');
-                _context3.next = 7;
+                filePath = path.join(appRoot, '/tmpl/menuItem.ejs');
+                _context3.next = 4;
                 return fs.readFileSync(filePath, 'utf8');
 
-              case 7:
+              case 4:
                 str = _context3.sent;
                 buffer = ejs.render(str, this);
+                _context3.next = 8;
+                return fs.existsSync(exportFilePath);
+
+              case 8:
+                isExist = _context3.sent;
 
                 if (!isExist) {
                   _context3.next = 16;

@@ -1,9 +1,6 @@
 'use strict';
-import dissectController from './lib/dissect-controller';
-import dissectView from './lib/dissect-view';
-import dissectModel from './lib/dissect-model';
-import dissectConfig from './lib/dissect-config';
-import inflection from 'inflection';
+require ('babel-core/register');
+require ('babel-polyfill');
 
 (function()
 {
@@ -13,7 +10,12 @@ import inflection from 'inflection';
 	  , JSONcleaner = require('./lib/comment-cut-out')
 	  , normalize = require('./lib/normalize')
 		, fse = require('fs-extra')
-		, path = require('path');
+		, path = require('path')
+    , dissectController = require('./lib/dissect-controller')
+    , dissectView = require('./lib/dissect-view')
+    , dissectModel = require('./lib/dissect-model')
+    , dissectConfig = require('./lib/dissect-config')
+    , inflection = require('inflection');
 
 	// Constants
 	var ct = require('./lib/constants');

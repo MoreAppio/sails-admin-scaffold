@@ -18,7 +18,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
       ejs = require('ejs'),
       inflection = require('inflection'),
       fse = require('fs-extra'),
-      path = require('path');
+      path = require('path'),
+      appRoot = require('app-root-path').path;
 
   var DissectController = function DissectController(scaffold, model, config) {
     try {
@@ -285,7 +286,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
               case 23:
                 modelAssociation = _context3.sent;
-                filePath = path.join(__dirname, '/tmpl/model.ejs');
+                filePath = path.join(appRoot, '/tmpl/model.ejs');
                 _context3.next = 27;
                 return fs.readFileSync(filePath, 'utf8');
 
