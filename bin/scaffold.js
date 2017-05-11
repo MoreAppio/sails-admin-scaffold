@@ -353,7 +353,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 								return _context2.finish(44);
 
 							case 52:
-								console.log('@ scaffold succeeded.');
+								this.message('Scaffold succeeded.', ct.MSG_SUCCESS);
 								_context2.next = 58;
 								break;
 

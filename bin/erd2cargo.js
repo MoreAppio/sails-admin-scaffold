@@ -318,24 +318,24 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
               case 7:
                 execBuildErd = _context4.sent;
                 textChunk = this.decoder.write(execBuildErd);
-                // console.log('@ execBuildErd result=>', textChunk);
 
+                console.log('@ exportErd result==>' + textChunk + '.');
                 return _context4.abrupt('return', true);
 
-              case 12:
-                _context4.prev = 12;
+              case 13:
+                _context4.prev = 13;
                 _context4.t0 = _context4['catch'](0);
 
                 // throw new Error(error);
                 this.message(_context4.t0, ct.MSG_ERROR);
                 return _context4.abrupt('return', false);
 
-              case 16:
+              case 17:
               case 'end':
                 return _context4.stop();
             }
           }
-        }, _callee4, this, [[0, 12]]);
+        }, _callee4, this, [[0, 13]]);
       }));
 
       function exportErd() {
@@ -375,7 +375,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
               case 9:
                 readRawDir = _context5.sent;
 
-                console.log('@ readDir result=>', readRawDir);
+                console.log('@ Models will be export to Cargo CMS=>', readRawDir, '.\n');
 
                 rawCount = 0;
                 _iteratorNormalCompletion = true;
@@ -399,7 +399,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                   break;
                 }
 
-                console.warn('! Skipped ' + file + ' because it is a .bak file.');
+                console.warn('! Skipped ' + file + ' because it is a .bak file.\n.');
                 return _context5.abrupt('continue', 31);
 
               case 23:
@@ -413,7 +413,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 result = _context5.sent;
                 textChunk = this.decoder.write(result);
 
-                if (result) console.log('@ execSync scaffold result=>\n' + textChunk);
+                if (result) console.log('@ export scaffold result==>\n' + textChunk + '.');
 
               case 31:
                 _iteratorNormalCompletion = true;
@@ -495,7 +495,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 isExist = _context6.sent;
 
                 if (!isExist) {
-                  _context6.next = 14;
+                  _context6.next = 15;
                   break;
                 }
 
@@ -510,29 +510,30 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 return _fs2.default.writeFileSync(target, dataWithFix);
 
               case 12:
-                _context6.next = 15;
+                this.message('AppendBody to \'' + target + '\' successed.', ct.MSG_SUCCESS);
+                _context6.next = 16;
                 break;
 
-              case 14:
+              case 15:
                 console.warn('@ Target ' + target + ' is not exist so skip to beautify.');
 
-              case 15:
+              case 16:
                 return _context6.abrupt('return', true);
 
-              case 18:
-                _context6.prev = 18;
+              case 19:
+                _context6.prev = 19;
                 _context6.t0 = _context6['catch'](0);
 
                 // throw new Error(error);
                 this.message(_context6.t0, ct.MSG_ERROR);
                 return _context6.abrupt('return', false);
 
-              case 22:
+              case 23:
               case 'end':
                 return _context6.stop();
             }
           }
-        }, _callee6, this, [[0, 18]]);
+        }, _callee6, this, [[0, 19]]);
       }));
 
       function appendBody(_x, _x2) {
@@ -560,7 +561,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
               case 4:
                 readModelDir = _context8.sent;
 
-                console.log('@ beautifyJs readDir result=>', readModelDir);
+                console.log('@ Model Js files will be beautify=>', readModelDir);
                 count = 0;
                 _iteratorNormalCompletion2 = true;
                 _didIteratorError2 = false;
@@ -643,21 +644,22 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 return _context8.finish(19);
 
               case 27:
+                this.message('Beautify files in folder \'' + modelPath + '\' successed.', ct.MSG_SUCCESS);
                 return _context8.abrupt('return', true);
 
-              case 30:
-                _context8.prev = 30;
+              case 31:
+                _context8.prev = 31;
                 _context8.t1 = _context8['catch'](0);
 
                 this.message(_context8.t1, ct.MSG_ERROR);
                 return _context8.abrupt('return', false);
 
-              case 34:
+              case 35:
               case 'end':
                 return _context8.stop();
             }
           }
-        }, _callee8, this, [[0, 30], [10, 15, 19, 27], [20,, 22, 26]]);
+        }, _callee8, this, [[0, 31], [10, 15, 19, 27], [20,, 22, 26]]);
       }));
 
       function beautifyJs(_x3) {
@@ -800,13 +802,13 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
     message: function message(_message, type) {
       if (type == ct.MSG_ERROR) {
-        console.log('\x1b[1;97;101m%s\x1b[0m %s', '! ERROR: ', _message);
+        console.log('\x1b[1;97;101m%s\x1b[0m %s', '!ERROR!', _message);
       } else if (type == ct.MSG_WARNING) {
-        console.log('\x1b[1;41;103m%s\x1b[0m %s', '!WARNING: ', _message);
+        console.log('\x1b[1;41;103m%s\x1b[0m %s', '!WARNING!', _message);
       } else if (type == ct.MSG_SUCCESS) {
-        console.log('\x1b[1;97;42m%s\x1b[0m %s', '- SUCCESS: ', _message);
+        console.log('\x1b[1;97;42m%s\x1b[0m %s', ' SUCCESS ', _message);
       } else if (type == ct.MSG_FAILED) {
-        console.log('\x1b[1;97;101m%s\x1b[0m %s', '!FAIL: ', _message);
+        console.log('\x1b[1;97;101m%s\x1b[0m %s', '!FAIL!', _message);
       }
     },
 
