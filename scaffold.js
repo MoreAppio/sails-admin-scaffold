@@ -3,6 +3,7 @@ import dissectController from './lib/dissect-controller';
 import dissectView from './lib/dissect-view';
 import dissectModel from './lib/dissect-model';
 import dissectConfig from './lib/dissect-config';
+import inflection from 'inflection';
 
 (function()
 {
@@ -90,16 +91,41 @@ import dissectConfig from './lib/dissect-config';
 			return json;
 		},
 
+    // check if hook exists
+    checkHookAdmin: async function (json, model) {
+      const hookPath = `${json.dest}/api/hook/sails-hook-admin`;
+      const hookExist = await fs.existsSync(hookPath);
+      // console.log('hookPath=>', hookPath, ', exists=>', hookExist);
+      if (hookExist) {
+        // console.log('@ hook "sails-hook-admin" exist!');
+        const readModelDir = await fs.readdirSync(`${hookPath}/api/models`);
+        // console.log('@ readDir result=>', readModelDir);
+        let count = 0;
+        for (const file of readModelDir) {
+          try {
+            const fileName = file.replace('.js', '');
+            model.name = model.name.trim().replace('__', '_');
+            const name = inflection.classify(model.name, false);
+            // console.warn('@ fileName=>', fileName, ', model name=>', name);
+            if (fileName.toLowerCase() === name.toLowerCase()) {
+              console.log(`- Skip model ${fileName} because the hook has already built-in.`);
+              return true;
+            }
+          } catch (error) {
+            throw new Error(error);
+          }
+        }
+        return false;
+      }
+    },
+
 		job : async function(file)
 		{
       try {
         var json = JSON.parse(JSONcleaner.clean(file));
 
-        console.log(json);
-        console.log(path.join(json.dest, json.controllerBasePath, '/admin'));
-        if (config.clean) {
-          await fse.removeSync(json.dest);
-        }
+        // console.log(json);
+        // console.log(path.join(json.dest, json.controllerBasePath, '/admin'));
         await fse.ensureDirSync(path.join(json.dest, json.controllerBasePath, '/admin'));
         await fse.ensureDirSync(path.join(json.dest, json.controllerBasePath, '/api/admin'));
         await fse.ensureDirSync(path.join(json.dest, json.controllerBasePath, '/api/admin'));
@@ -110,58 +136,41 @@ import dissectConfig from './lib/dissect-config';
         const appDir = path.dirname(require.main.filename);
 
         let count = 0;
-        for(let model of json.models) {
+        for(const model of json.models) {
 
-          // check if hook exists
-          const hookPath = `${appDir}/api/hook/sails-hook-admin`;
-          const hookExist = await fs.existsSync(hookPath);
-          if (hookExist) {
-            console.warn('@ hook exist!');
-            const readModelDir = await fs.readdirSync(`${hookPath}\api\models`);
-            console.log('@ readDir result=>', readModelDir);
-            let count = 0;
-            for (const file of readModelDir) {
-              try {
-                const fileName = file.replace('.js', '');
-                console.warn('@ fileName=>', fileName);
-                if (fileName === model.name) {
-                  continue;
-                }
-              } catch (error) {
-                throw new Error(error);
-              }
-            }
+          let skip = await this.checkHookAdmin(json, model);
+
+          if(!skip) {
+            await dissectController.dissect({
+            scaffold: this,
+            model,
+            config: json,
+            });
+
+            await dissectView.dissect({
+            scaffold: this,
+            model,
+            config: json,
+            });
+
+            await dissectModel.dissect({
+            scaffold: this,
+            model,
+            config: json,
+            });
+
+            await dissectConfig.dissect({
+            scaffold: this,
+            model,
+            config: json,
+            count,
+            });
           }
-
-          await dissectController.dissect({
-           scaffold: this,
-           model,
-           config: json,
-          });
-
-          await dissectView.dissect({
-           scaffold: this,
-           model,
-           config: json,
-          });
-
-          await dissectModel.dissect({
-           scaffold: this,
-           model,
-           config: json,
-          });
-
-          await dissectConfig.dissect({
-           scaffold: this,
-           model,
-           config: json,
-           count,
-          });
-
           count++;
         }
+        console.log('@ scaffold succeeded.');
       } catch (e) {
-        console.log(e);
+			  this.message(e, ct.MSG_ERROR);
       }
 		},
 

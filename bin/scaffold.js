@@ -16,6 +16,10 @@ var _dissectConfig = require('./lib/dissect-config');
 
 var _dissectConfig2 = _interopRequireDefault(_dissectConfig);
 
+var _inflection = require('inflection');
+
+var _inflection2 = _interopRequireDefault(_inflection);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
@@ -89,190 +93,216 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 			return json;
 		},
 
-		job: function () {
-			var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(file) {
-				var json, appDir, count, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, model, hookPath, hookExist, readModelDir, _count, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, _file, fileName;
+		// check if hook exists
+		checkHookAdmin: function () {
+			var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(json, model) {
+				var hookPath, hookExist, readModelDir, count, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, file, fileName, name;
 
 				return regeneratorRuntime.wrap(function _callee$(_context) {
 					while (1) {
 						switch (_context.prev = _context.next) {
 							case 0:
-								_context.prev = 0;
-								json = JSON.parse(JSONcleaner.clean(file));
+								hookPath = json.dest + '/api/hook/sails-hook-admin';
+								_context.next = 3;
+								return fs.existsSync(hookPath);
 
+							case 3:
+								hookExist = _context.sent;
 
-								console.log(json);
-								console.log(path.join(json.dest, json.controllerBasePath, '/admin'));
-
-								if (!config.clean) {
-									_context.next = 7;
+								if (!hookExist) {
+									_context.next = 46;
 									break;
 								}
 
 								_context.next = 7;
-								return fse.removeSync(json.dest);
+								return fs.readdirSync(hookPath + '/api/models');
 
 							case 7:
-								_context.next = 9;
-								return fse.ensureDirSync(path.join(json.dest, json.controllerBasePath, '/admin'));
+								readModelDir = _context.sent;
 
-							case 9:
-								_context.next = 11;
-								return fse.ensureDirSync(path.join(json.dest, json.controllerBasePath, '/api/admin'));
-
-							case 11:
-								_context.next = 13;
-								return fse.ensureDirSync(path.join(json.dest, json.controllerBasePath, '/api/admin'));
-
-							case 13:
-								_context.next = 15;
-								return fse.ensureDirSync(path.join(json.dest, '/api/models'));
-
-							case 15:
-								_context.next = 17;
-								return fse.ensureDirSync(path.join(json.dest, '/config/init/menuItem'));
-
-							case 17:
-								json = this.cleanJSON(json);
-								//
-								appDir = path.dirname(require.main.filename);
+								// console.log('@ readDir result=>', readModelDir);
 								count = 0;
 								_iteratorNormalCompletion = true;
 								_didIteratorError = false;
 								_iteratorError = undefined;
-								_context.prev = 23;
-								_iterator = json.models[Symbol.iterator]();
+								_context.prev = 12;
+								_iterator = readModelDir[Symbol.iterator]();
+
+							case 14:
+								if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+									_context.next = 31;
+									break;
+								}
+
+								file = _step.value;
+								_context.prev = 16;
+								fileName = file.replace('.js', '');
+
+								model.name = model.name.trim().replace('__', '_');
+								name = _inflection2.default.classify(model.name, false);
+								// console.warn('@ fileName=>', fileName, ', model name=>', name);
+
+								if (!(fileName.toLowerCase() === name.toLowerCase())) {
+									_context.next = 23;
+									break;
+								}
+
+								console.log('- Skip model ' + fileName + ' because the hook has already built-in.');
+								return _context.abrupt('return', true);
+
+							case 23:
+								_context.next = 28;
+								break;
 
 							case 25:
-								if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-									_context.next = 84;
+								_context.prev = 25;
+								_context.t0 = _context['catch'](16);
+								throw new Error(_context.t0);
+
+							case 28:
+								_iteratorNormalCompletion = true;
+								_context.next = 14;
+								break;
+
+							case 31:
+								_context.next = 37;
+								break;
+
+							case 33:
+								_context.prev = 33;
+								_context.t1 = _context['catch'](12);
+								_didIteratorError = true;
+								_iteratorError = _context.t1;
+
+							case 37:
+								_context.prev = 37;
+								_context.prev = 38;
+
+								if (!_iteratorNormalCompletion && _iterator.return) {
+									_iterator.return();
+								}
+
+							case 40:
+								_context.prev = 40;
+
+								if (!_didIteratorError) {
+									_context.next = 43;
 									break;
 								}
 
-								model = _step.value;
+								throw _iteratorError;
 
+							case 43:
+								return _context.finish(40);
 
-								// check if hook exists
-								hookPath = appDir + '/api/hook/sails-hook-admin';
-								_context.next = 30;
-								return fs.existsSync(hookPath);
+							case 44:
+								return _context.finish(37);
 
-							case 30:
-								hookExist = _context.sent;
+							case 45:
+								return _context.abrupt('return', false);
 
-								if (!hookExist) {
-									_context.next = 72;
-									break;
-								}
+							case 46:
+							case 'end':
+								return _context.stop();
+						}
+					}
+				}, _callee, this, [[12, 33, 37, 45], [16, 25], [38,, 40, 44]]);
+			}));
 
-								console.warn('@ hook exist!');
-								_context.next = 35;
-								return fs.readdirSync(hookPath + 'apimodels');
+			function checkHookAdmin(_x, _x2) {
+				return _ref.apply(this, arguments);
+			}
 
-							case 35:
-								readModelDir = _context.sent;
+			return checkHookAdmin;
+		}(),
 
-								console.log('@ readDir result=>', readModelDir);
-								_count = 0;
+		job: function () {
+			var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(file) {
+				var json, appDir, count, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, model, skip;
+
+				return regeneratorRuntime.wrap(function _callee2$(_context2) {
+					while (1) {
+						switch (_context2.prev = _context2.next) {
+							case 0:
+								_context2.prev = 0;
+								json = JSON.parse(JSONcleaner.clean(file));
+
+								// console.log(json);
+								// console.log(path.join(json.dest, json.controllerBasePath, '/admin'));
+
+								_context2.next = 4;
+								return fse.ensureDirSync(path.join(json.dest, json.controllerBasePath, '/admin'));
+
+							case 4:
+								_context2.next = 6;
+								return fse.ensureDirSync(path.join(json.dest, json.controllerBasePath, '/api/admin'));
+
+							case 6:
+								_context2.next = 8;
+								return fse.ensureDirSync(path.join(json.dest, json.controllerBasePath, '/api/admin'));
+
+							case 8:
+								_context2.next = 10;
+								return fse.ensureDirSync(path.join(json.dest, '/api/models'));
+
+							case 10:
+								_context2.next = 12;
+								return fse.ensureDirSync(path.join(json.dest, '/config/init/menuItem'));
+
+							case 12:
+								json = this.cleanJSON(json);
+								//
+								appDir = path.dirname(require.main.filename);
+								count = 0;
 								_iteratorNormalCompletion2 = true;
 								_didIteratorError2 = false;
 								_iteratorError2 = undefined;
-								_context.prev = 41;
-								_iterator2 = readModelDir[Symbol.iterator]();
+								_context2.prev = 18;
+								_iterator2 = json.models[Symbol.iterator]();
 
-							case 43:
+							case 20:
 								if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
-									_context.next = 58;
+									_context2.next = 38;
 									break;
 								}
 
-								_file = _step2.value;
-								_context.prev = 45;
-								fileName = _file.replace('.js', '');
+								model = _step2.value;
+								_context2.next = 24;
+								return this.checkHookAdmin(json, model);
 
-								console.warn('@ fileName=>', fileName);
+							case 24:
+								skip = _context2.sent;
 
-								if (!(fileName === model.name)) {
-									_context.next = 50;
+								if (skip) {
+									_context2.next = 34;
 									break;
 								}
 
-								return _context.abrupt('continue', 55);
-
-							case 50:
-								_context.next = 55;
-								break;
-
-							case 52:
-								_context.prev = 52;
-								_context.t0 = _context['catch'](45);
-								throw new Error(_context.t0);
-
-							case 55:
-								_iteratorNormalCompletion2 = true;
-								_context.next = 43;
-								break;
-
-							case 58:
-								_context.next = 64;
-								break;
-
-							case 60:
-								_context.prev = 60;
-								_context.t1 = _context['catch'](41);
-								_didIteratorError2 = true;
-								_iteratorError2 = _context.t1;
-
-							case 64:
-								_context.prev = 64;
-								_context.prev = 65;
-
-								if (!_iteratorNormalCompletion2 && _iterator2.return) {
-									_iterator2.return();
-								}
-
-							case 67:
-								_context.prev = 67;
-
-								if (!_didIteratorError2) {
-									_context.next = 70;
-									break;
-								}
-
-								throw _iteratorError2;
-
-							case 70:
-								return _context.finish(67);
-
-							case 71:
-								return _context.finish(64);
-
-							case 72:
-								_context.next = 74;
+								_context2.next = 28;
 								return _dissectController2.default.dissect({
 									scaffold: this,
 									model: model,
 									config: json
 								});
 
-							case 74:
-								_context.next = 76;
+							case 28:
+								_context2.next = 30;
 								return _dissectView2.default.dissect({
 									scaffold: this,
 									model: model,
 									config: json
 								});
 
-							case 76:
-								_context.next = 78;
+							case 30:
+								_context2.next = 32;
 								return _dissectModel2.default.dissect({
 									scaffold: this,
 									model: model,
 									config: json
 								});
 
-							case 78:
-								_context.next = 80;
+							case 32:
+								_context2.next = 34;
 								return _dissectConfig2.default.dissect({
 									scaffold: this,
 									model: model,
@@ -280,69 +310,69 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 									count: count
 								});
 
-							case 80:
-
+							case 34:
 								count++;
 
-							case 81:
-								_iteratorNormalCompletion = true;
-								_context.next = 25;
+							case 35:
+								_iteratorNormalCompletion2 = true;
+								_context2.next = 20;
 								break;
 
-							case 84:
-								_context.next = 90;
+							case 38:
+								_context2.next = 44;
 								break;
 
-							case 86:
-								_context.prev = 86;
-								_context.t2 = _context['catch'](23);
-								_didIteratorError = true;
-								_iteratorError = _context.t2;
+							case 40:
+								_context2.prev = 40;
+								_context2.t0 = _context2['catch'](18);
+								_didIteratorError2 = true;
+								_iteratorError2 = _context2.t0;
 
-							case 90:
-								_context.prev = 90;
-								_context.prev = 91;
+							case 44:
+								_context2.prev = 44;
+								_context2.prev = 45;
 
-								if (!_iteratorNormalCompletion && _iterator.return) {
-									_iterator.return();
+								if (!_iteratorNormalCompletion2 && _iterator2.return) {
+									_iterator2.return();
 								}
 
-							case 93:
-								_context.prev = 93;
+							case 47:
+								_context2.prev = 47;
 
-								if (!_didIteratorError) {
-									_context.next = 96;
+								if (!_didIteratorError2) {
+									_context2.next = 50;
 									break;
 								}
 
-								throw _iteratorError;
+								throw _iteratorError2;
 
-							case 96:
-								return _context.finish(93);
+							case 50:
+								return _context2.finish(47);
 
-							case 97:
-								return _context.finish(90);
+							case 51:
+								return _context2.finish(44);
 
-							case 98:
-								_context.next = 103;
+							case 52:
+								console.log('@ scaffold succeeded.');
+								_context2.next = 58;
 								break;
 
-							case 100:
-								_context.prev = 100;
-								_context.t3 = _context['catch'](0);
+							case 55:
+								_context2.prev = 55;
+								_context2.t1 = _context2['catch'](0);
 
-								console.log(_context.t3);
+								this.message(_context2.t1, ct.MSG_ERROR);
 
-							case 103:
+							case 58:
 							case 'end':
-								return _context.stop();
+								return _context2.stop();
 						}
 					}
-				}, _callee, this, [[0, 100], [23, 86, 90, 98], [41, 60, 64, 72], [45, 52], [65,, 67, 71], [91,, 93, 97]]);
+				}, _callee2, this, [[0, 55], [18, 40, 44, 52], [45,, 47, 51]]);
 			}));
 
-			function job(_x) {
-				return _ref.apply(this, arguments);
+			function job(_x3) {
+				return _ref2.apply(this, arguments);
 			}
 
 			return job;

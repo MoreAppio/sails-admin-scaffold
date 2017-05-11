@@ -36,30 +36,36 @@ import { version } from './package.json';
         if (config.help) {
           this.help();
         } else if (config.clean) {
-          this.cleanFolder();
+          await this.cleanFolder();
         } else if (config.version) {
           this.version();
         } else if (!config.file) {
           this.shell();
         } else {
-          let err = false;
-          let file = null;
-          try {
-            const exist = await fs.existsSync(config.file);
-            if (exist) {
-              file = await fs.readFileSync(config.file, 'utf8');
-            }
-          } catch (e) {
-            err = true;
-            console.log('Couldn\'t access \'' + config.file + '\'!');
-          }
-          if (!err) {
-            this.config = config;
-            await this.start();
-          }
+          await this.checkFile();
         }
       } catch (error) {
-        console.error(error);
+        this.message(error, ct.MSG_ERROR);
+      }
+    },
+
+    checkFile: async function() {
+      let file = null;
+      const exist = await fs.existsSync(this.config.file);
+      if (exist) {
+        try {
+          file = await fs.readFileSync(this.config.file, 'utf8');
+        } catch (error) {
+          file = false;
+          this.message('! Can not access ERD file.', ct.MSG_ERROR);
+        }
+      } else {
+        console.warn('! Giving ERD file path is not exist.');
+      }
+      if (exist && file) {
+        await this.start();
+      } else {
+        this.message('ERD to Cargo exporting stop.', ct.MSG_ERROR);
       }
     },
 
@@ -73,7 +79,7 @@ import { version } from './package.json';
           const rmExportPath = await cp.execSync(cmd);
           if (rmExportPath) console.log('@ Remove sucecssed.');
         } else {
-          console.warn('@ Default ERD export path is not exist!');
+          console.log('@ Default ERD export path is not exist!');
         }
         const isCargoPathExists = await fs.existsSync(this.config.exportPath.cargo);
         if (isCargoPathExists) {
@@ -82,11 +88,11 @@ import { version } from './package.json';
           const rmExportPath = await cp.execSync(cmd);
           if (rmExportPath) console.log('@ Remove sucecssed.');
         } else {
-          console.warn('@ Default Cargo CMS export path is not exist!');
+          console.log('@ Default Cargo CMS export path is not exist!');
         }
-        await this.start();
+        await this.checkFile();
       } catch (error) {
-        console.error(error);
+        this.message(error, ct.MSG_ERROR);
       }
     },
 
@@ -99,10 +105,12 @@ import { version } from './package.json';
 
         const execBuildErd = await cp.execSync(buildErdScript);
         const textChunk = this.decoder.write(execBuildErd);
-        console.log('@ execBuildErd result=>', textChunk);
+        // console.log('@ execBuildErd result=>', textChunk);
+        return true;
       } catch (error) {
         // throw new Error(error);
-        console.error(error);
+        this.message(error, ct.MSG_ERROR);
+        return false;
       }
     },
 
@@ -111,7 +119,7 @@ import { version } from './package.json';
         const erdExportPath = this.config.exportPath.erd;
         const exist = await fs.existsSync(erdExportPath);
         if (!exist) {
-          return console.error(`No folder '${erdExportPath}' exists.`);
+          return console.error(`No ERD exported  folder '${erdExportPath}' exists.`);
         }
 
         const readRawDir = await fs.readdirSync(erdExportPath);
@@ -129,11 +137,13 @@ import { version } from './package.json';
           const execScaffold = `${babelNode} --presets es2015,stage-0 scaffold.js -f ${erdExportPath}/${file}`;
           const result = await cp.execSync(execScaffold);
           const textChunk = this.decoder.write(result);
-          if (result) console.log('@ execSync result=>\n', textChunk);
+          if (result) console.log(`@ execSync scaffold result=>\n${textChunk}`);
         }
+        return true;
       } catch (error) {
         // throw new Error(error);
-        console.error(error);
+        this.message(error, ct.MSG_ERROR);
+        return false;
       }
 
     },
@@ -149,9 +159,11 @@ import { version } from './package.json';
         } else {
           console.warn(`@ Target ${target} is not exist so skip to beautify.`);
         }
+        return true;
       } catch (error) {
-        throw new Error(error);
-        // console.error(error);
+        // throw new Error(error);
+        this.message(error, ct.MSG_ERROR);
+        return false;
       }
     },
 
@@ -170,8 +182,10 @@ import { version } from './package.json';
             await fs.writeFileSync(filePath, dataWithFix);
           });
         }
+        return true;
       } catch (error) {
-        console.error(error);
+        this.message(error, ct.MSG_ERROR);
+        return false;
       }
 
     },
@@ -194,22 +208,22 @@ import { version } from './package.json';
           ) &&
           await this.beautifyJs();
         if (!exportResult && !codeBeautify) {
-        console.error('! Code beautify failed.');
+          console.error('! Code beautify failed.');
         }
       } catch (error) {
-        console.error(error);
+        this.message(error, ct.MSG_ERROR);
       }
     },
 
     help: function() {
-      console.log('\nUsage: node xx.js [options argument]\n');
+      console.log('\nUsage: node erd2cargo.js [options argument] [filePath]\n');
       console.log('Options:');
 
       console.log('  -ce, --cargo-export [path]\t Target a specific folder path for export ERD json to Cargo CMS. (default: `./export_cargo`).');
       console.log('  -ee, --erd-export [path]\t Target a specific folder path for export ERD to json. (default: `./export_erd`).');
       console.log('  -m, --mode [modeName]\t\t Select a specific mode.');
-      console.log('  -f, --file [filepath]\t\t\t File to read (required).');
-      console.log('  -p, --php [filepath]\t\t\t Target a specific PHP exec path.');
+      console.log('  -f, --file [filePath]\t\t\t File to read (required).');
+      console.log('  -p, --php [filePath]\t\t\t Target a specific PHP exec path.');
       console.log('  -F, --force-overwrite\t\t\t Force overwrite of existing files.');
       console.log('  -c, --clean\t\t\t\t Clean exist files before scaffolding.');
       console.log('  -v, --version\t\t\t\t Shows the version of this tool.');
@@ -232,13 +246,13 @@ import { version } from './package.json';
 
     message: function(message, type) {
       if (type == ct.MSG_ERROR) {
-        console.log('\x1b[1;97;101m%s\x1b[0m %s', '!ERROR!', message);
+        console.log('\x1b[1;97;101m%s\x1b[0m %s', '! ERROR: ', message);
       } else if (type == ct.MSG_WARNING) {
-        console.log('\x1b[1;41;103m%s\x1b[0m %s', '!WARNING!', message);
+        console.log('\x1b[1;41;103m%s\x1b[0m %s', '!WARNING: ', message);
       } else if (type == ct.MSG_SUCCESS) {
-        console.log('\x1b[1;97;42m%s\x1b[0m %s', ' SUCCESS ', message);
+        console.log('\x1b[1;97;42m%s\x1b[0m %s', '- SUCCESS: ', message);
       } else if (type == ct.MSG_FAILED) {
-        console.log('\x1b[1;97;101m%s\x1b[0m %s', '!FAIL!', message);
+        console.log('\x1b[1;97;101m%s\x1b[0m %s', '!FAIL: ', message);
       }
     },
 
