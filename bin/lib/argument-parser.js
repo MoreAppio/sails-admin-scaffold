@@ -16,14 +16,14 @@
 
 	var config = {
 		exportPath: {
-			erd: appDir + '/export_erd',
-			cargo: appDir + '/export_cargo'
+			erd: './export_erd',
+			cargo: './export_cargo'
 		},
 		erdSource: null,
 		overwrite: false,
 		help: false,
 		pathPhp: 'php',
-		pathMwse: 'mwse/vendor/bin/mysql-workbench-schema-export',
+		pathMwse: appDir + '/mwse/vendor/bin/mysql-workbench-schema-export',
 		exportModes: ['node-sequelize', 'scaffold'],
 		mode: 'node-sequelize'
 	};
