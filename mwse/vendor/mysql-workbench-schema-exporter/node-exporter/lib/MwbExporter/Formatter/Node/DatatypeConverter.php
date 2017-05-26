@@ -34,7 +34,7 @@ class DatatypeConverter extends BaseDatatypeConverter
     public function setup()
     {
         $this->register(array(
-            static::DATATYPE_TINYINT            => 'INTEGER',
+            static::DATATYPE_TINYINT            => 'TINYINT',
             static::DATATYPE_SMALLINT           => 'INTEGER',
             static::DATATYPE_MEDIUMINT          => 'INTEGER',
             static::DATATYPE_INT                => 'INTEGER',
@@ -71,7 +71,7 @@ class DatatypeConverter extends BaseDatatypeConverter
             static::DATATYPE_MULTIPOLYGON       => 'STRING', //??
             static::DATATYPE_GEOMETRYCOLLECTION => 'STRING', //??
             static::DATATYPE_BIT                => 'INTEGER',
-            static::DATATYPE_ENUM               => 'STRING',
+            static::DATATYPE_ENUM               => 'ENUM',
             static::DATATYPE_SET                => 'STRING',
             static::USERDATATYPE_BOOLEAN        => 'BOOLEAN',
             static::USERDATATYPE_BOOL           => 'BOOLEAN',

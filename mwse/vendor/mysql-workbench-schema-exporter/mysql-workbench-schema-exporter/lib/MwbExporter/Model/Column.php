@@ -277,4 +277,14 @@ class Column extends Base
     {
         return $this->parameters->get('length');
     }
+
+    /**
+     * Get datatypeExplicitParams.
+     *
+     * @return string
+     */
+    public function getExplicitParams()
+    {
+        return $this->parameters->get('datatypeExplicitParams');
+    }
 }
