@@ -9,13 +9,13 @@ import {
   js_beautify as beautify
 } from 'js-beautify';
 import arg from './lib/argument-parser';
-import { version } from './package.json';
 
 (function() {
 
+  const version = require(`${__dirname.replace('/bin','')}/package.json`)
   const ct = require('./lib/constants');
   const Erd2Cargo = {
-    appDir: path.dirname(require.main.filename),
+    appDir: __dirname,
 
     decoder: new StringDecoder('utf8'),
 
@@ -133,10 +133,9 @@ import { version } from './package.json';
             continue;
           }
           console.log(`@ ${rawCount}/${readRawDir.length} file name=> ${file}`);
-          const babelNode = typeof projRoot !== 'undefined' ? 
-            'node' : 'node_modules/babel-cli/bin/babel-node.js';
-          const appRoot = typeof projRoot !== 'undefined' ? projRoot : '.';
-          const execScaffold = `${babelNode} ${appRoot}/scaffold.js -f ${erdExportPath}/${file}`;
+          const runtimeDir = __dirname;
+          const babelNode = runtimeDir.indexOf('bin') === '-1' ? 'babel-node' : 'node';
+          const execScaffold = `${babelNode} ${runtimeDir}/scaffold.js -f ${erdExportPath}/${file}`;
           const result = await cp.execSync(execScaffold);
           const textChunk = this.decoder.write(result);
           if (result) console.log(`@ export scaffold result==>\n${textChunk}.`);

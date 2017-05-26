@@ -95,7 +95,8 @@ require ('babel-polyfill');
 
     // check if hook exists
     checkHookAdmin: async function (json, model) {
-      const hookPath = `${json.dest}/api/hook/sails-hook-admin`;
+      // const hookPath = `${json.dest}/api/hook/sails-hook-admin`;
+      const hookPath = `./api/hooks/sails-hook-admin`;
       const hookExist = await fs.existsSync(hookPath);
       // console.log('hookPath=>', hookPath, ', exists=>', hookExist);
       if (hookExist) {
@@ -135,7 +136,7 @@ require ('babel-polyfill');
         await fse.ensureDirSync(path.join(json.dest, '/config/init/menuItem'));
         json = this.cleanJSON(json);
         //
-        const appDir = path.dirname(require.main.filename);
+        const appDir = __dirname;
 
         let count = 0;
         for(const model of json.models) {
