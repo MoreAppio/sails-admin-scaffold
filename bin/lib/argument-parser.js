@@ -13,8 +13,7 @@
 
 	var path = require('path');
 	var projRoot = require('app-root-path').path;
-	// var runtimeDir = path.dirname(require.main.filename);
-	var runtimeDir = __dirname;
+	var runtimeDir = path.dirname(require.main.filename);
 
 	var config = {
 		exportPath: {

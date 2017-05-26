@@ -255,8 +255,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 for (i = tableArray.length - 1; i >= 0; i--) {
                   for (j = 0; j <= tableArray.length - 1; j++) {
                     if (i !== j) {
-                      console.log('i,j', i, j);
-                      console.log('tableArray[i],tableArray[j]', tableArray[i], tableArray[j]);
+                      // console.log('i,j', i, j);
+                      // console.log('tableArray[i],tableArray[j]', tableArray[i], tableArray[j]);
                       modelAssociation += '\n                    ' + tableArray[i] + '.belongsToMany(' + tableArray[j] + ', {\n                      through: ' + this.modelName + ',\n                      foreignKey: {\n                        name: \'' + tableArray[i] + 'Id\',\n                        as: \'' + inflection.pluralize(tableArray[j]) + '\',\n                      },\n                    });';
                     }
                   }

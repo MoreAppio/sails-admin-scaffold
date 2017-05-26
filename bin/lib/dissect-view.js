@@ -104,60 +104,54 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
       return dissect;
     }(),
 
-    exportVue: function () {
+    exportShow: function () {
       var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(exportFilePath) {
-        var filePath, str, buffer, isExist;
+        var filePath, isExist;
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.prev = 0;
-                filePath = path.join(appRoot, '/tmpl/view/vue.ejs');
+                filePath = path.join(appRoot, '/tmpl/view/show.ejs');
                 _context2.next = 4;
-                return fs.readFileSync(filePath, 'utf8');
-
-              case 4:
-                str = _context2.sent;
-                buffer = ejs.render(str, this);
-                _context2.next = 8;
                 return fs.existsSync(exportFilePath);
 
-              case 8:
+              case 4:
                 isExist = _context2.sent;
 
                 if (isExist) {
-                  _context2.next = 12;
+                  _context2.next = 8;
                   break;
                 }
 
-                _context2.next = 12;
-                return fs.writeFileSync(exportFilePath, buffer);
+                _context2.next = 8;
+                return fse.copySync(filePath, exportFilePath);
 
-              case 12:
-                _context2.next = 17;
+              case 8:
+                _context2.next = 13;
                 break;
 
-              case 14:
-                _context2.prev = 14;
+              case 10:
+                _context2.prev = 10;
                 _context2.t0 = _context2['catch'](0);
                 throw _context2.t0;
 
-              case 17:
+              case 13:
               case 'end':
                 return _context2.stop();
             }
           }
-        }, _callee2, this, [[0, 14]]);
+        }, _callee2, this, [[0, 10]]);
       }));
 
-      function exportVue(_x) {
+      function exportShow(_x) {
         return _ref2.apply(this, arguments);
       }
 
-      return exportVue;
+      return exportShow;
     }(),
 
-    exportShow: function () {
+    exportCreate: function () {
       var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee3(exportFilePath) {
         var filePath, isExist;
         return regeneratorRuntime.wrap(function _callee3$(_context3) {
@@ -165,7 +159,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
             switch (_context3.prev = _context3.next) {
               case 0:
                 _context3.prev = 0;
-                filePath = path.join(appRoot, '/tmpl/view/show.ejs');
+                filePath = path.join(appRoot, './tmpl/view/create.ejs');
                 _context3.next = 4;
                 return fs.existsSync(exportFilePath);
 
@@ -197,14 +191,14 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
         }, _callee3, this, [[0, 10]]);
       }));
 
-      function exportShow(_x2) {
+      function exportCreate(_x2) {
         return _ref3.apply(this, arguments);
       }
 
-      return exportShow;
+      return exportCreate;
     }(),
 
-    exportCreate: function () {
+    exportEdit: function () {
       var _ref4 = _asyncToGenerator(regeneratorRuntime.mark(function _callee4(exportFilePath) {
         var filePath, isExist;
         return regeneratorRuntime.wrap(function _callee4$(_context4) {
@@ -212,7 +206,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
             switch (_context4.prev = _context4.next) {
               case 0:
                 _context4.prev = 0;
-                filePath = path.join(appRoot, './tmpl/view/create.ejs');
+                filePath = path.join(appRoot, '/tmpl/view/edit.ejs');
                 _context4.next = 4;
                 return fs.existsSync(exportFilePath);
 
@@ -244,58 +238,64 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
         }, _callee4, this, [[0, 10]]);
       }));
 
-      function exportCreate(_x3) {
+      function exportEdit(_x3) {
         return _ref4.apply(this, arguments);
       }
 
-      return exportCreate;
+      return exportEdit;
     }(),
 
-    exportEdit: function () {
+    exportVue: function () {
       var _ref5 = _asyncToGenerator(regeneratorRuntime.mark(function _callee5(exportFilePath) {
-        var filePath, isExist;
+        var filePath, str, buffer, isExist;
         return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
                 _context5.prev = 0;
-                filePath = path.join(appRoot, '/tmpl/view/edit.ejs');
+                filePath = path.join(appRoot, '/tmpl/view/vue.ejs');
                 _context5.next = 4;
-                return fs.existsSync(exportFilePath);
+                return fs.readFileSync(filePath, 'utf8');
 
               case 4:
+                str = _context5.sent;
+                buffer = ejs.render(str, this);
+                _context5.next = 8;
+                return fs.existsSync(exportFilePath);
+
+              case 8:
                 isExist = _context5.sent;
 
                 if (isExist) {
-                  _context5.next = 8;
+                  _context5.next = 12;
                   break;
                 }
 
-                _context5.next = 8;
-                return fse.copySync(filePath, exportFilePath);
+                _context5.next = 12;
+                return fs.writeFileSync(exportFilePath, buffer);
 
-              case 8:
-                _context5.next = 13;
+              case 12:
+                _context5.next = 17;
                 break;
 
-              case 10:
-                _context5.prev = 10;
+              case 14:
+                _context5.prev = 14;
                 _context5.t0 = _context5['catch'](0);
                 throw _context5.t0;
 
-              case 13:
+              case 17:
               case 'end':
                 return _context5.stop();
             }
           }
-        }, _callee5, this, [[0, 10]]);
+        }, _callee5, this, [[0, 14]]);
       }));
 
-      function exportEdit(_x4) {
+      function exportVue(_x4) {
         return _ref5.apply(this, arguments);
       }
 
-      return exportEdit;
+      return exportVue;
     }(),
 
     exportIndex: function () {
