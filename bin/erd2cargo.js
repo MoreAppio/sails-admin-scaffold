@@ -24,17 +24,16 @@ var _argumentParser = require('./lib/argument-parser');
 
 var _argumentParser2 = _interopRequireDefault(_argumentParser);
 
-var _package = require('./package.json');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 (function () {
 
+  var _version = require(__dirname.replace('/bin', '') + '/package.json');
   var ct = require('./lib/constants');
   var Erd2Cargo = {
-    appDir: _path2.default.dirname(require.main.filename),
+    appDir: __dirname,
 
     decoder: new _string_decoder.StringDecoder('utf8'),
 
@@ -347,7 +346,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
     scaffold: function () {
       var _ref5 = _asyncToGenerator(regeneratorRuntime.mark(function _callee5() {
-        var erdExportPath, exist, readRawDir, rawCount, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, file, babelNode, appRoot, execScaffold, result, textChunk;
+        var erdExportPath, exist, readRawDir, rawCount, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, file, runtimeDir, babelNode, execScaffold, result, textChunk;
 
         return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
@@ -404,9 +403,9 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
               case 23:
                 console.log('@ ' + rawCount + '/' + readRawDir.length + ' file name=> ' + file);
-                babelNode = typeof projRoot !== 'undefined' ? 'node' : 'node_modules/babel-cli/bin/babel-node.js';
-                appRoot = typeof projRoot !== 'undefined' ? projRoot : '.';
-                execScaffold = babelNode + ' ' + appRoot + '/scaffold.js -f ' + erdExportPath + '/' + file;
+                runtimeDir = __dirname;
+                babelNode = runtimeDir.indexOf('bin') === '-1' ? 'babel-node' : 'node';
+                execScaffold = babelNode + ' ' + runtimeDir + '/scaffold.js -f ' + erdExportPath + '/' + file;
                 _context5.next = 29;
                 return _child_process2.default.execSync(execScaffold);
 
@@ -798,7 +797,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
     },
 
     version: function version() {
-      this.message('v' + _package.version, ct.MSG_SUCCESS);
+      this.message('v' + _version, ct.MSG_SUCCESS);
     },
 
     message: function message(_message, type) {

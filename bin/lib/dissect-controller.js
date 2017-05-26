@@ -9,7 +9,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
       inflection = require('inflection'),
       fse = require('fs-extra'),
       path = require('path'),
-      appRoot = require('app-root-path').path;
+      appRoot = __dirname.replace('/bin', '').replace('/lib', '');
 
   var DissectController = function DissectController(scaffold, model, config) {
     try {

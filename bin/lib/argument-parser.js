@@ -13,18 +13,19 @@
 
 	var path = require('path');
 	var projRoot = require('app-root-path').path;
-	var appDir = path.dirname(require.main.filename);
+	// var runtimeDir = path.dirname(require.main.filename);
+	var runtimeDir = __dirname;
 
 	var config = {
 		exportPath: {
-			erd: projRoot + '/export_erd',
-			cargo: projRoot + '/export_cargo'
+			erd: projRoot + '/.tmp/export_erd',
+			cargo: projRoot + '/.tmp/export_cargo'
 		},
 		erdSource: null,
 		overwrite: false,
 		help: false,
 		pathPhp: 'php',
-		pathMwse: appDir + '/mwse/vendor/bin/mysql-workbench-schema-export',
+		pathMwse: runtimeDir + '/mwse/vendor/bin/mysql-workbench-schema-export',
 		exportModes: ['node-sequelize', 'scaffold'],
 		mode: 'node-sequelize'
 	};

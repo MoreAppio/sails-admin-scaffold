@@ -19,7 +19,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
       inflection = require('inflection'),
       fse = require('fs-extra'),
       path = require('path'),
-      appRoot = require('app-root-path').path;
+      appRoot = __dirname.replace('/bin', '').replace('/lib', '');
 
   var DissectController = function DissectController(scaffold, model, config) {
     try {
@@ -82,7 +82,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
      */
     exportModelAss: function () {
       var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2() {
-        var associations, modelAssociation, hasBelongsTo, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, ass, hasHasMany, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, _ass;
+        var associations, modelAssociation, hasBelongsTo, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, ass, hasHasMany, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, _ass, hasBelongsToMany, tableArray, _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, _ass2, i, j;
 
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
@@ -198,14 +198,77 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 return _context2.finish(36);
 
               case 44:
+
+                // check BelongsToMany (Many to Many)
+                hasBelongsToMany = _lodash2.default.has(this.associations, 'belongsToMany');
+                tableArray = [];
+
+                if (!hasBelongsToMany) {
+                  _context2.next = 66;
+                  break;
+                }
+
+                _iteratorNormalCompletion3 = true;
+                _didIteratorError3 = false;
+                _iteratorError3 = undefined;
+                _context2.prev = 50;
+
+                for (_iterator3 = associations.belongsToMany[Symbol.iterator](); !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                  _ass2 = _step3.value;
+
+                  tableArray.push(_ass2);
+                }
+                _context2.next = 58;
+                break;
+
+              case 54:
+                _context2.prev = 54;
+                _context2.t2 = _context2['catch'](50);
+                _didIteratorError3 = true;
+                _iteratorError3 = _context2.t2;
+
+              case 58:
+                _context2.prev = 58;
+                _context2.prev = 59;
+
+                if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                  _iterator3.return();
+                }
+
+              case 61:
+                _context2.prev = 61;
+
+                if (!_didIteratorError3) {
+                  _context2.next = 64;
+                  break;
+                }
+
+                throw _iteratorError3;
+
+              case 64:
+                return _context2.finish(61);
+
+              case 65:
+                return _context2.finish(58);
+
+              case 66:
+                for (i = tableArray.length - 1; i >= 0; i--) {
+                  for (j = 0; j <= tableArray.length - 1; j++) {
+                    if (i !== j) {
+                      console.log('i,j', i, j);
+                      console.log('tableArray[i],tableArray[j]', tableArray[i], tableArray[j]);
+                      modelAssociation += '\n                    ' + tableArray[i] + '.belongsToMany(' + tableArray[j] + ', {\n                      through: ' + this.modelName + ',\n                      foreignKey: {\n                        name: \'' + tableArray[i] + 'Id\',\n                        as: \'' + inflection.pluralize(tableArray[j]) + '\',\n                      },\n                    });';
+                    }
+                  }
+                }
                 return _context2.abrupt('return', modelAssociation);
 
-              case 45:
+              case 68:
               case 'end':
                 return _context2.stop();
             }
           }
-        }, _callee2, this, [[7, 11, 15, 23], [16,, 18, 22], [28, 32, 36, 44], [37,, 39, 43]]);
+        }, _callee2, this, [[7, 11, 15, 23], [16,, 18, 22], [28, 32, 36, 44], [37,, 39, 43], [50, 54, 58, 66], [59,, 61, 65]]);
       }));
 
       function exportModelAss() {
@@ -217,7 +280,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
     exportModel: function () {
       var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee3(exportFilePath) {
-        var modelColumn, _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, column, name, defaultValue, modelAssociation, filePath, str, buffer, isExist;
+        var modelColumn, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, column, name, columnType, modelAssociation, filePath, str, buffer, isExist;
 
         return regeneratorRuntime.wrap(function _callee3$(_context3) {
           while (1) {
@@ -225,106 +288,143 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
               case 0:
                 _context3.prev = 0;
                 modelColumn = '';
-                _iteratorNormalCompletion3 = true;
-                _didIteratorError3 = false;
-                _iteratorError3 = undefined;
+                _iteratorNormalCompletion4 = true;
+                _didIteratorError4 = false;
+                _iteratorError4 = undefined;
                 _context3.prev = 5;
+                _iterator4 = this.model.fields[Symbol.iterator]();
 
-                for (_iterator3 = this.model.fields[Symbol.iterator](); !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                  column = _step3.value;
-                  name = inflection.camelize(column.name, true);
-
-                  if (column.type.toLowerCase() !== 'virtual') {
-                    defaultValue = void 0;
-
-                    if (column.type.toLowerCase() === 'string') {
-                      defaultValue = '\'' + column.default + '\'';
-                    } else {
-                      defaultValue = column.default;
-                    }
-                    modelColumn += name + ': {\n                  type: ' + this.toSequelizeType(column.type) + (column.length ? '(' + column.length + ')' : '') + ',\n                  ' + (column.allowNull ? 'allowNull: true,' : 'allowNull: false,') + '\n                  ' + (column.unique ? 'unique: true,' : '') + '\n                  ' + (column.default ? 'defaultValue: ' + defaultValue : '') + '\n                },';
-                  } else {
-                    modelColumn += name + ': {\n                type: ' + this.toSequelizeType(column.type) + (column.length ? '(' + column.length + ')' : '') + ',\n                get: function() {},\n                set: function() {},\n              },';
-                  }
-                }
-                _context3.next = 13;
-                break;
-
-              case 9:
-                _context3.prev = 9;
-                _context3.t0 = _context3['catch'](5);
-                _didIteratorError3 = true;
-                _iteratorError3 = _context3.t0;
-
-              case 13:
-                _context3.prev = 13;
-                _context3.prev = 14;
-
-                if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                  _iterator3.return();
-                }
-
-              case 16:
-                _context3.prev = 16;
-
-                if (!_didIteratorError3) {
-                  _context3.next = 19;
+              case 7:
+                if (_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done) {
+                  _context3.next = 31;
                   break;
                 }
 
-                throw _iteratorError3;
+                column = _step4.value;
 
-              case 19:
-                return _context3.finish(16);
+                // console.log('!!!! column=>', column);
+                name = inflection.camelize(column.name, true);
+                columnType = column.type.toLowerCase();
+                _context3.t0 = columnType;
+                _context3.next = _context3.t0 === 'virtual' ? 14 : _context3.t0 === 'enum' ? 16 : 22;
+                break;
 
-              case 20:
-                return _context3.finish(13);
+              case 14:
+                modelColumn += '\n                  ' + name + ': {\n                    type: ' + this.toSequelizeType(columnType) + (column.length ? '(' + column.length + ')' : '') + ',\n                    get: function() {},\n                    set: function() {},\n                  },\n\n\n                ';
+                return _context3.abrupt('break', 28);
 
-              case 21:
-                _context3.next = 23;
+              case 16:
+                modelColumn += name + ': {\n                    type: ' + this.toSequelizeType(columnType) + '(' + column.param.slice(1, -1) + '),';
+                if (column.allowNull) {
+                  modelColumn += '' + (column.allowNull ? 'allowNull: true,' : 'allowNull: false,');
+                }
+                if (column.unique) {
+                  modelColumn += 'unique: true,';
+                }
+                if (column.default) {
+                  modelColumn += 'defaultValue: ' + this.getColumnDefaultType(column) + ',';
+                }
+                modelColumn += '},\n\n';
+                return _context3.abrupt('break', 28);
+
+              case 22:
+                modelColumn += name + ': {\n                    type: ' + this.toSequelizeType(columnType) + (column.length ? '(' + column.length + ')' : '') + ',';
+                if (column.allowNull) {
+                  modelColumn += '' + (column.allowNull ? 'allowNull: true,' : 'allowNull: false,');
+                }
+                if (column.unique) {
+                  modelColumn += 'unique: true,';
+                }
+                if (column.default) {
+                  modelColumn += 'defaultValue: ' + this.getColumnDefaultType(column) + ',';
+                }
+                modelColumn += '},\n\n';
+                return _context3.abrupt('break', 28);
+
+              case 28:
+                _iteratorNormalCompletion4 = true;
+                _context3.next = 7;
+                break;
+
+              case 31:
+                _context3.next = 37;
+                break;
+
+              case 33:
+                _context3.prev = 33;
+                _context3.t1 = _context3['catch'](5);
+                _didIteratorError4 = true;
+                _iteratorError4 = _context3.t1;
+
+              case 37:
+                _context3.prev = 37;
+                _context3.prev = 38;
+
+                if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                  _iterator4.return();
+                }
+
+              case 40:
+                _context3.prev = 40;
+
+                if (!_didIteratorError4) {
+                  _context3.next = 43;
+                  break;
+                }
+
+                throw _iteratorError4;
+
+              case 43:
+                return _context3.finish(40);
+
+              case 44:
+                return _context3.finish(37);
+
+              case 45:
+                _context3.next = 47;
                 return this.exportModelAss();
 
-              case 23:
+              case 47:
                 modelAssociation = _context3.sent;
                 filePath = path.join(appRoot, '/tmpl/model.ejs');
-                _context3.next = 27;
+                _context3.next = 51;
                 return fs.readFileSync(filePath, 'utf8');
 
-              case 27:
+              case 51:
                 str = _context3.sent;
                 buffer = ejs.render(str, _extends({}, this, {
                   modelColumn: modelColumn,
                   modelAssociation: modelAssociation
                 }));
-                _context3.next = 31;
+                _context3.next = 55;
                 return fs.existsSync(exportFilePath);
 
-              case 31:
+              case 55:
                 isExist = _context3.sent;
 
                 if (isExist) {
-                  _context3.next = 35;
+                  _context3.next = 59;
                   break;
                 }
 
-                _context3.next = 35;
+                _context3.next = 59;
                 return fs.writeFileSync(exportFilePath, buffer);
 
-              case 35:
-                _context3.next = 40;
+              case 59:
+                _context3.next = 64;
                 break;
 
-              case 37:
-                _context3.prev = 37;
-                _context3.t1 = _context3['catch'](0);
-                throw _context3.t1;
+              case 61:
+                _context3.prev = 61;
+                _context3.t2 = _context3['catch'](0);
+                throw _context3.t2;
 
-              case 40:
+              case 64:
               case 'end':
                 return _context3.stop();
             }
           }
-        }, _callee3, this, [[0, 37], [5, 9, 13, 21], [14,, 16, 20]]);
+        }, _callee3, this, [[0, 61], [5, 33, 37, 45], [38,, 40, 44]]);
       }));
 
       function exportModel(_x) {
@@ -333,6 +433,18 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
       return exportModel;
     }(),
+
+    getColumnDefaultType: function getColumnDefaultType(column) {
+      var defaultValue = void 0;
+      var type = column.type.toLowerCase();
+      if (type === 'string' || type === 'enum') {
+        defaultValue = '\'' + column.default + '\'';
+      } else {
+        defaultValue = column.default;
+      }
+      return defaultValue;
+    },
+
 
     toSequelizeType: function toSequelizeType(type) {
       try {
@@ -354,12 +466,19 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
           case 'date':
             return 'Sequelize.DATE';
             break;
+          case 'tinyint':
           case 'boolean':
           case 'bool':
             return 'Sequelize.BOOLEAN';
             break;
           case 'virtual':
             return 'Sequelize.VIRTUAL';
+            break;
+          case 'enum':
+            return 'Sequelize.ENUM';
+            break;
+          case 'text':
+            return 'Sequelize.TEXT';
             break;
           default:
             return 'Sequelize.STRING';

@@ -88,7 +88,8 @@ require('babel-polyfill');
 					while (1) {
 						switch (_context.prev = _context.next) {
 							case 0:
-								hookPath = json.dest + '/api/hook/sails-hook-admin';
+								// const hookPath = `${json.dest}/api/hook/sails-hook-admin`;
+								hookPath = './api/hooks/sails-hook-admin';
 								_context.next = 3;
 								return fs.existsSync(hookPath);
 
@@ -238,7 +239,7 @@ require('babel-polyfill');
 							case 12:
 								json = this.cleanJSON(json);
 								//
-								appDir = path.dirname(require.main.filename);
+								appDir = __dirname;
 								count = 0;
 								_iteratorNormalCompletion2 = true;
 								_didIteratorError2 = false;

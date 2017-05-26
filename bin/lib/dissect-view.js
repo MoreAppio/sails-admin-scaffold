@@ -11,7 +11,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
       inflection = require('inflection'),
       fse = require('fs-extra'),
       path = require('path'),
-      appRoot = require('app-root-path').path;
+      appRoot = __dirname.replace('/bin', '').replace('/lib', '');
 
   var DissectController = function DissectController(scaffold, model, config) {
     try {
@@ -113,8 +113,6 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
               case 0:
                 _context2.prev = 0;
                 filePath = path.join(appRoot, '/tmpl/view/vue.ejs');
-                // const filePath = path.join('./tmpl/view/vue.ejs');
-
                 _context2.next = 4;
                 return fs.readFileSync(filePath, 'utf8');
 
