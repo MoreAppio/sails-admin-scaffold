@@ -212,7 +212,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
               case 0:
                 _context3.prev = 0;
 
-                console.log('@ cleanFolder appDir is located=>', this.appDir);
+                this.message('@ Clean folder: appDir is located=>', this.appDir, ct.MSG_WARNING);
                 _context3.next = 4;
                 return _fs2.default.existsSync(this.config.exportPath.erd);
 
@@ -233,12 +233,12 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
               case 10:
                 rmExportPath = _context3.sent;
 
-                if (rmExportPath) console.log('@ Remove sucecssed.');
+                if (rmExportPath) this.message('@ Clean old folder sucecssed', ct.MSG_SUCCESS);
                 _context3.next = 15;
                 break;
 
               case 14:
-                console.log('@ Default ERD export path is not exist!');
+                this.message('@ Default ERD export path is not exist!', ct.MSG_WARNING);
 
               case 15:
                 _context3.next = 17;
@@ -266,7 +266,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 break;
 
               case 27:
-                console.log('@ Default Cargo CMS export path is not exist!');
+                this.message('@ Default Cargo CMS export path is not exist!', ct.MSG_WARNING);
 
               case 28:
                 _context3.next = 30;

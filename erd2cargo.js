@@ -71,15 +71,16 @@ import arg from './lib/argument-parser';
 
     cleanFolder: async function() {
       try {
-        console.log('@ cleanFolder appDir is located=>', this.appDir);
+        this.message('@ Clean folder: appDir is located=>', this.appDir, ct.MSG_WARNING);
         const isErdPathExists = await fs.existsSync(this.config.exportPath.erd);
         if (isErdPathExists) {
           const cmd = `rm -rf ${this.config.exportPath.erd}`;
           console.log(`@ cleanFolder command=>${cmd}`);
           const rmExportPath = await cp.execSync(cmd);
-          if (rmExportPath) console.log('@ Remove sucecssed.');
+          if (rmExportPath) 
+            this.message('@ Clean old folder sucecssed', ct.MSG_SUCCESS);
         } else {
-          console.log('@ Default ERD export path is not exist!');
+          this.message('@ Default ERD export path is not exist!', ct.MSG_WARNING);
         }
         const isCargoPathExists = await fs.existsSync(this.config.exportPath.cargo);
         if (isCargoPathExists) {
@@ -88,7 +89,7 @@ import arg from './lib/argument-parser';
           const rmExportPath = await cp.execSync(cmd);
           if (rmExportPath) console.log('@ Remove sucecssed.');
         } else {
-          console.log('@ Default Cargo CMS export path is not exist!');
+          this.message('@ Default Cargo CMS export path is not exist!', ct.MSG_WARNING);
         }
         await this.checkFile();
       } catch (error) {
