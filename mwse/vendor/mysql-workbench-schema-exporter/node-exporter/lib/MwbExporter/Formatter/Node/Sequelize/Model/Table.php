@@ -183,10 +183,35 @@ class Table extends BaseTable
       $hasMany = array();
       $c = array();
 
+      // 處理多對多
       if ($this->isManyToMany()) {
+        $belongsToMany = array();
+        $table = array();
+        echo sprintf("\n======================\n");
         echo sprintf('! Table "%s" is many to many.'. "\n", $this->getModelName());
-        return $result;
+        echo sprintf("----------------------\n");
+        foreach ($this->getAllForeignKeys() as $foreignKey) {
+          # code...
+          echo sprintf('! Table Foreign Key is "%s", table is "%s".'. "\n", 
+            $foreignKey->getForeign()->getColumnName(),
+            $foreignKey->getForeign()->getTable()->getModelName()
+          );
+          echo sprintf('! Table Local Key is "%s", table is "%s".'. "\n", 
+            $foreignKey->getLocal()->getColumnName(),
+            $foreignKey->getForeign()->getTable()->getModelName()
+          );
+          $table = $this->jsonify(
+            Inflector::classify($foreignKey->getForeign()->getTable()->getModelName())
+          );
+          array_push($belongsToMany, $table);
+        }
+        echo sprintf("----------------------\n");
+        echo sprintf("======================\n\n");
+        $c['"belongsToMany"'] = $belongsToMany;
+        return $c;
       }
+
+      // 處理關聯
       foreach ($this->getForeignKeys() as $key) {
         # code...
         echo sprintf('! LocalM2MRelatedName: %s, ForeignM2MRelatedName: %s'. "\n",
@@ -257,14 +282,32 @@ class Table extends BaseTable
           if (!$isIdField && !$isRelationId && !$isDateField) 
           {
             $c = array();
+            //  取出欄位名稱
             $name = $column->getColumnName();
             $c['"name"'] = $this->jsonify($name);
-            $c['"type"'] = $this->getJSObject(sprintf('"%s"', $type ? $type : 'STRING.BINARY'), true, true);
+            
+            // 取出欄位類型
+            $c['"type"'] = $this->jsonify($type);
+            // $this->getJSObject(sprintf('"%s"', $type ? $type : 'STRING.BINARY'), true, true);
+
+            // 取出 ENUM 參數
+            if ($type === 'ENUM') {
+              $param = $column->getExplicitParams();
+              echo sprintf('! ExplicitParams: "%s".', $param);
+              // $param = str_replace("'", "\"", $param);
+              $param = str_replace("(", "[", $param);
+              $param = str_replace(")", "]", $param);
+              $c['"param"'] = $this->jsonify($param);
+            }
             $c['"allowNull"'] = !$column->isNotNull();
 
+            // 組合表單顯示的欄位名稱
             $layout = array();
             $layout['"label"'] = $this->jsonify($column->getColumnName());
             $c['"layout"'] = $layout;
+
+            // 取出 comment
+            $layout['"comment"'] = $this->jsonify($column->getComment());
 
             if ($column->isPrimary()) {
                 $c['"primaryKey"'] = true;
@@ -281,7 +324,7 @@ class Table extends BaseTable
             if ($column->getDefaultValue()) {
               $isBool = $column->getDefaultValue() === 'true' || 
                 $column->getDefaultValue() === 'false';
-              if ($type === 'STRING') {
+              if ($type === 'STRING' || $type === 'ENUM') {
                 $defaultValue = $this->jsonify($column->getDefaultValue());
               } else if ($type === 'INTEGER'){
                 $defaultValue = intval($column->getDefaultValue());
