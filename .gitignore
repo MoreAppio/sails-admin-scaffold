@@ -3,3 +3,4 @@ exported/
 generated/
 export_cargo/
 export_erd/
+.tmp/
