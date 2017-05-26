@@ -12,13 +12,13 @@
 </fieldset>
 <script>
   var formRules = {<% fields.forEach(function(field){ %>
-    <%= field.name %>:{
+    <%- field.name %>: {
       required: true,
     },<% }); %>
   };
 
   var formMessages = {<% fields.forEach(function(field){ %>
-    <%= field.name %>:{
+    <%- field.name %>: {
       required: "請給予 <%= field.label %>",
     },<% }); %>
   };

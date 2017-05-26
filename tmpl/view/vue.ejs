@@ -11,9 +11,8 @@ var appModel = {
   modelName: modelName,
   prefix: prefix,
   data: {
-    item: {
-      <% fields.forEach(function(field){ %><% if (field.type !== 'virtual') { %><%= field.name %>: '',
-      <%}%><% }); %>
+    item: {<% fields.forEach(function (field) { if (field.type !== 'virtual') { %>
+        <%- `${field.name}:'',` %><% }}); %>
     },
     items: [],
     option: {}
@@ -22,12 +21,12 @@ var appModel = {
     table: {
       selectIndex: COMMON.DEFAULT_INDEX,
     },
-  }
-}
+  },
+};
 
 /* TABLETOOLS */
 
-<%%- include ../default/vue.ejs %>
+<%%- include ../../admin/default/vue.ejs %>
 // 需要新增函式可以對 appMain 進行定義，如：
 // appMain.log = function () {console.log("123")}
 
