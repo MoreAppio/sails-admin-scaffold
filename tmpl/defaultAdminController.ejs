@@ -1,63 +1,66 @@
 module.exports = {
-  index: async(req, res) => {
-    const model = req.options.controller.split("/").reverse()[0];
+  async index(req, res) {
+    const model = req.options.controller.split('/').reverse()[0];
     const user = AuthService.getSessionUser(req);
     const roles = await RoleService.getUserAllRole({ user });
     const permissions = UserService.getPermissions(roles, model);
     if (permissions.read === true || permissions.read_write === true) {
       res.ok({
         view: true,
-        serverSidePaging: <%= model.isServerSidePaging %>,
-        layout: 'admin/default/index',
+        serverSidePaging: <%- model.isServerSidePaging %>,
+        layout: 'admin_default/index',
         permissions,
       });
     } else {
       res.forbidden();
     }
   },
-  create: async(req, res) => {
-    const model = req.options.controller.split("/").reverse()[0];
+
+  async create(req, res) {
+    const model = req.options.controller.split('/').reverse()[0];
     const user = AuthService.getSessionUser(req);
     const roles = await RoleService.getUserAllRole({ user });
     const permissions = UserService.getPermissions(roles, model);
     if ((permissions.read === true && permissions.create === true) || permissions.read_write === true) {
       res.ok({
         view: true,
-        layout: 'admin/default/create',
+        layout: 'admin_default/create',
         permissions,
       });
     } else {
       res.forbidden();
     }
   },
-  edit: async(req, res) => {
-    const model = req.options.controller.split("/").reverse()[0];
+
+  async edit(req, res) {
+    const model = req.options.controller.split('/').reverse()[0];
     const user = AuthService.getSessionUser(req);
     const roles = await RoleService.getUserAllRole({ user });
     const permissions = UserService.getPermissions(roles, model);
     if ((permissions.read === true && permissions.update === true) || permissions.read_write === true) {
       res.ok({
         view: true,
-        layout: 'admin/default/edit',
+        layout: 'admin_default/edit',
         permissions,
       });
     } else {
       res.forbidden();
     }
   },
-  show: async(req, res) => {
-    const model = req.options.controller.split("/").reverse()[0];
+
+  async show(req, res) {
+    const model = req.options.controller.split('/').reverse()[0];
     const user = AuthService.getSessionUser(req);
     const roles = await RoleService.getUserAllRole({ user });
     const permissions = UserService.getPermissions(roles, model);
     if (permissions.read === true || permissions.read_write === true) {
       res.ok({
         view: true,
-        layout: 'admin/default/show',
+        layout: 'admin_default/show',
         permissions,
       });
     } else {
       res.forbidden();
     }
   },
-}
+};

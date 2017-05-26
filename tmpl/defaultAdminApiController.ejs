@@ -1,11 +1,10 @@
 module.exports = {
-
-  find: async (req, res) => {
+  async find(req, res) {
     try {
       const { query, method, body } = req;
       const { serverSidePaging } = query;
       const modelName = req.options.controller.split("/").reverse()[0];
-      const include = [ <%= model.queryInclude %> ];
+      const include = [<%= model.queryInclude %>];
       const isPost = method === 'POST';
       let mServerSidePaging = isPost ? body.serverSidePaging : serverSidePaging;
       let mQuery = isPost ? body : query;
@@ -24,38 +23,38 @@ module.exports = {
     }
   },
 
-  findOne: async (req, res) => {
+  async findOne(req, res) {
     try {
       const { id } = req.params;
       const item = await <%= nameSingularCap %>.findOne({
-        where:{
+        where: {
           id
         },
         include: []
       });
-      res.ok({data: {item}});
+      res.ok({ data: { item } });
     } catch (e) {
       res.serverError(e);
     }
   },
 
-  create: async (req, res) => {
+  async create(req, res) {
     try {
       let data = req.body;
       const item = await <%= nameSingularCap %>.create(data);
       let message = 'Create success.';
-      res.ok({ message, data: { item } } );
+      res.ok({ message, data: { item } });
     } catch (e) {
       res.serverError(e);
     }
   },
 
-  update: async (req, res) => {
+  async update(req, res) {
     try {
       const { id } = req.params;
       const data = req.body;
       const message = 'Update success.';
-      const item = await <%= nameSingularCap %>.update(data ,{
+      const item = await <%= nameSingularCap %>.update(data, {
         where: { id, },
       });
       res.ok({ message, data: { item } });
@@ -64,14 +63,14 @@ module.exports = {
     }
   },
 
-  destroy: async (req, res) => {
+  async destroy(req, res) {
     try {
       const { id } = req.params;
       const item = await <%= nameSingularCap %>.destroy({ where: { id } });
       let message = 'Delete success';
-      res.ok({message, data: {item}});
+      res.ok({ message, data: { item } });
     } catch (e) {
       res.serverError(e);
     }
-  }
-}
+  },
+};

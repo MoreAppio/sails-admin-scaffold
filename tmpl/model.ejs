@@ -1,34 +1,38 @@
 module.exports = {
   attributes: {
     <%- modelColumn  %>
-    createdDateTime:{
+    createdDateTime: {
       type: Sequelize.VIRTUAL,
-      get: function(){
-        try{
+      get() {
+        try {
           return UtilsService.DataTimeFormat(this.getDataValue('createdAt'));
-        } catch(e){
+        } catch (e) {
           sails.log.error(e);
+          throw e;
+        }
+      },
+    },
+
+    updatedDateTime: {
+      type: Sequelize.VIRTUAL,
+      get() {
+        try {
+          return UtilsService.DataTimeFormat(this.getDataValue('updatedAt'));
+        } catch (e) {
+          sails.log.error(e);
+          throw e;
         }
       }
     },
+  },
 
-    updatedDateTime:{
-      type: Sequelize.VIRTUAL,
-      get: function(){
-        try{
-          return UtilsService.DataTimeFormat(this.getDataValue('updatedAt'));
-        } catch(e){
-          sails.log.error(e);
-        }
-      }
-    }
+  associations() {
+    <%- modelAssociation %>
   },
-  associations: () => {
-    <%= modelAssociation %>
-  },
+
   options: {
     classMethods: {},
     instanceMethods: {},
     hooks: {}
-  }
+  },
 };
