@@ -1,3 +1,9 @@
+/* global
+sails
+AuthService
+UserService
+RoleService
+*/
 module.exports = {
   async index(req, res) {
     const model = req.options.controller.split('/').reverse()[0];
@@ -5,14 +11,14 @@ module.exports = {
     const roles = await RoleService.getUserAllRole({ user });
     const permissions = UserService.getPermissions(roles, model);
     if (permissions.read === true || permissions.read_write === true) {
-      res.ok({
+      return res.ok({
         view: true,
         serverSidePaging: <%- model.isServerSidePaging %>,
-        layout: 'admin_default/index',
+        layout: 'admin/default/index',
         permissions,
       });
     } else {
-      res.forbidden();
+      return res.forbidden();
     }
   },
 
@@ -22,13 +28,13 @@ module.exports = {
     const roles = await RoleService.getUserAllRole({ user });
     const permissions = UserService.getPermissions(roles, model);
     if ((permissions.read === true && permissions.create === true) || permissions.read_write === true) {
-      res.ok({
+      return res.ok({
         view: true,
-        layout: 'admin_default/create',
+        layout: 'admin/default/create',
         permissions,
       });
     } else {
-      res.forbidden();
+      return res.forbidden();
     }
   },
 
@@ -38,13 +44,13 @@ module.exports = {
     const roles = await RoleService.getUserAllRole({ user });
     const permissions = UserService.getPermissions(roles, model);
     if ((permissions.read === true && permissions.update === true) || permissions.read_write === true) {
-      res.ok({
+      return res.ok({
         view: true,
-        layout: 'admin_default/edit',
+        layout: 'admin/default/edit',
         permissions,
       });
     } else {
-      res.forbidden();
+      return res.forbidden();
     }
   },
 
@@ -54,13 +60,13 @@ module.exports = {
     const roles = await RoleService.getUserAllRole({ user });
     const permissions = UserService.getPermissions(roles, model);
     if (permissions.read === true || permissions.read_write === true) {
-      res.ok({
+      return res.ok({
         view: true,
-        layout: 'admin_default/show',
+        layout: 'admin/default/show',
         permissions,
       });
     } else {
-      res.forbidden();
+      return res.forbidden();
     }
   },
 };
