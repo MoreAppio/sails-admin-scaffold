@@ -1,6 +1,6 @@
 {
   "name": "erd-cargo-node-scaffold",
-  "version": "1.0.33",
+  "version": "1.0.38",
   "description": "MySQL workbench ERD map to Cargo CMS admin generator.",
   "main": "index.js",
   "private": true,
