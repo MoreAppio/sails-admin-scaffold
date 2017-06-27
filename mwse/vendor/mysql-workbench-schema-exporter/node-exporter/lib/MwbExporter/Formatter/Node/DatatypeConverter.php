@@ -42,7 +42,7 @@ class DatatypeConverter extends BaseDatatypeConverter
             static::DATATYPE_FLOAT              => 'DECIMAL',
             static::DATATYPE_DOUBLE             => 'DECIMAL',
             static::DATATYPE_DECIMAL            => 'DECIMAL',
-            static::DATATYPE_CHAR               => 'STRING',
+            static::DATATYPE_CHAR               => 'CHAR',
             static::DATATYPE_VARCHAR            => 'STRING',
             static::DATATYPE_BINARY             => 'STRING',
             static::DATATYPE_VARBINARY          => 'STRING',

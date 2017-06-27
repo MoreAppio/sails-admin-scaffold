@@ -1,29 +1,6 @@
 module.exports = {
   attributes: {
     <%- modelColumn  %>
-    createdDateTime: {
-      type: Sequelize.VIRTUAL,
-      get() {
-        try {
-          return UtilsService.DataTimeFormat(this.getDataValue('createdAt'));
-        } catch (e) {
-          sails.log.error(e);
-          throw e;
-        }
-      },
-    },
-
-    updatedDateTime: {
-      type: Sequelize.VIRTUAL,
-      get() {
-        try {
-          return UtilsService.DataTimeFormat(this.getDataValue('updatedAt'));
-        } catch (e) {
-          sails.log.error(e);
-          throw e;
-        }
-      }
-    },
   },
 
   associations() {
@@ -33,6 +10,6 @@ module.exports = {
   options: {
     classMethods: {},
     instanceMethods: {},
-    hooks: {}
+    hooks: {},
   },
 };

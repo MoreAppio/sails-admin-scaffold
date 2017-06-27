@@ -287,4 +287,15 @@ class Column extends Base
     {
         return $this->parameters->get('datatypeExplicitParams');
     }
+
+
+    /**
+     * get the comment of this object (without the hints for the exporter)
+     *
+     * @return string
+     */
+    public function getComment()
+    {
+        return $comment = $this->parameters->get('comment');
+    }
 }

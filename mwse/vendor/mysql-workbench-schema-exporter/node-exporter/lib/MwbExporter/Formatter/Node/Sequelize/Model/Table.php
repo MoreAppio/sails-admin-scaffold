@@ -165,7 +165,8 @@ class Table extends BaseTable
         $result = array(
             '"timestamps"' => true,
             '"underscored"' => false,
-            '"tableName"' => $this->jsonify($this->getModelName())
+            '"tableName"' => $this->jsonify($this->getModelName()),
+            '"comment"' => $this->jsonify($this->getComment())
         );
         return $this->getJSObject($result);
     }
@@ -272,14 +273,14 @@ class Table extends BaseTable
           $type = $this->getFormatter()->getDatatypeConverter()->getType($column);
           $firstLetter = substr($column->getColumnName(), 0, 1);
           $last2Letters = substr($column->getColumnName(), -2);
-          $isIdField = ($column->getColumnName() === 'id' && $column->isPrimary());
+          $isIdField = ($column->getColumnName() === 'id' && $column->isPrimary() && $type !== 'CHAR');
           $isRelationId = (strtolower($last2Letters) === 'id' && strtoupper($firstLetter) == $firstLetter);
           $isDateField = (strtolower($last2Letters) === 'at' && $type === 'DATE');
           // echo sprintf('! isIdField: "%s", isRelationId: "%s".'. "\n", 
           //   $this->strbool(!$isIdField), 
           //   $this->strbool(!$isRelationId));
 
-          if (!$isIdField && !$isRelationId && !$isDateField) 
+        if (!$isIdField && !$isRelationId && !$isDateField) 
           {
             $c = array();
             //  取出欄位名稱
@@ -289,11 +290,12 @@ class Table extends BaseTable
             // 取出欄位類型
             $c['"type"'] = $this->jsonify($type);
             // $this->getJSObject(sprintf('"%s"', $type ? $type : 'STRING.BINARY'), true, true);
+            // echo sprintf('! type: "%s".'. "\n", $c['"type"']);
 
             // 取出 ENUM 參數
             if ($type === 'ENUM') {
               $param = $column->getExplicitParams();
-              echo sprintf('! ExplicitParams: "%s".', $param);
+              // echo sprintf('! ExplicitParams: "%s".', $param);
               // $param = str_replace("'", "\"", $param);
               $param = str_replace("(", "[", $param);
               $param = str_replace(")", "]", $param);
@@ -301,13 +303,14 @@ class Table extends BaseTable
             }
             $c['"allowNull"'] = !$column->isNotNull();
 
+            // 取出 comment
+            $c['"comment"'] = $this->jsonify($column->getComment());
+            // echo sprintf('! comment: "%s".'. "\n", $layout['"comment"']);
+
             // 組合表單顯示的欄位名稱
             $layout = array();
             $layout['"label"'] = $this->jsonify($column->getColumnName());
             $c['"layout"'] = $layout;
-
-            // 取出 comment
-            $layout['"comment"'] = $this->jsonify($column->getComment());
 
             if ($column->isPrimary()) {
                 $c['"primaryKey"'] = true;
@@ -331,7 +334,7 @@ class Table extends BaseTable
               } else if ($isBool) {
                 $defaultValue = ($column->getDefaultValue() === 'true');
               }
-              echo sprintf('! type: "%s", final DefaultValue: `%s`.'. "\n", $type, $defaultValue);
+              // echo sprintf('! type: "%s", final DefaultValue: `%s`.'. "\n", $type, $defaultValue);
               $c['"default"'] = $defaultValue;
             }
             array_push($result, $c);
