@@ -1,72 +1,10 @@
-/* global
-sails
-AuthService
-UserService
-RoleService
-*/
+// gets your app's root path
+const root = '../';
+
 module.exports = {
-  async index(req, res) {
-    const model = req.options.controller.split('/').reverse()[0];
-    const user = AuthService.getSessionUser(req);
-    const roles = await RoleService.getUserAllRole({ user });
-    const permissions = UserService.getPermissions(roles, model);
-    if (permissions.read === true || permissions.read_write === true) {
-      return res.ok({
-        view: true,
-        serverSidePaging: <%- model.isServerSidePaging %>,
-        layout: 'admin/default/index',
-        permissions,
-      });
-    } else {
-      return res.forbidden();
-    }
-  },
-
-  async create(req, res) {
-    const model = req.options.controller.split('/').reverse()[0];
-    const user = AuthService.getSessionUser(req);
-    const roles = await RoleService.getUserAllRole({ user });
-    const permissions = UserService.getPermissions(roles, model);
-    if ((permissions.read === true && permissions.create === true) || permissions.read_write === true) {
-      return res.ok({
-        view: true,
-        layout: 'admin/default/create',
-        permissions,
-      });
-    } else {
-      return res.forbidden();
-    }
-  },
-
-  async edit(req, res) {
-    const model = req.options.controller.split('/').reverse()[0];
-    const user = AuthService.getSessionUser(req);
-    const roles = await RoleService.getUserAllRole({ user });
-    const permissions = UserService.getPermissions(roles, model);
-    if ((permissions.read === true && permissions.update === true) || permissions.read_write === true) {
-      return res.ok({
-        view: true,
-        layout: 'admin/default/edit',
-        permissions,
-      });
-    } else {
-      return res.forbidden();
-    }
-  },
-
-  async show(req, res) {
-    const model = req.options.controller.split('/').reverse()[0];
-    const user = AuthService.getSessionUser(req);
-    const roles = await RoleService.getUserAllRole({ user });
-    const permissions = UserService.getPermissions(roles, model);
-    if (permissions.read === true || permissions.read_write === true) {
-      return res.ok({
-        view: true,
-        layout: 'admin/default/show',
-        permissions,
-      });
-    } else {
-      return res.forbidden();
-    }
-  },
+  index: async (req, res) => { await DefaultViewService.index(req, res, root); },
+  create: async (req, res) => { await DefaultViewService.create(req, res, root); },
+  edit: async (req, res) => { await DefaultViewService.edit(req, res, root); },
+  show: async (req, res) => { await DefaultViewService.show(req, res, root); },
 };
+

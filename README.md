@@ -9,6 +9,14 @@ credits to everyone who contributed.
 * auto gen relation from ERD.
 * auto gen basic view/controller/model from JSON.
 
+## work map
+- [ ] be able to build as a node_module
+- [ ] be able to build as a node_module
+- [ ] be able to build as a node_module
+
+
+## 啟動
+npm start --- -f erd.mwb --clean
 
 ======== old stuffs ===
 

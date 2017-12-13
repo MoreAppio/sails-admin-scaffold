@@ -184,6 +184,7 @@ class Table extends BaseTable
       $hasMany = array();
       $c = array();
 
+      echo sprintf('! now Table is "%s" .'. "\n", $this->getModelName());
       // 處理多對多
       if ($this->isManyToMany()) {
         $belongsToMany = array();
@@ -222,6 +223,10 @@ class Table extends BaseTable
         foreach ($key->getLocals() as $localKey) {
           # code...
           foreach ($key->getForeigns() as $foreign) {
+            echo sprintf('! OwningTable ModelName %s -------> ReferencedTable ModelName %s'. "\n", 
+              $key->getOwningTable()->getModelName(),
+              $key->getReferencedTable()->getModelName()
+            );
             # code...
             echo sprintf('! local key %s.%s -------> %s.%s (%s)'. "\n", 
               $key->getOwningTable()->getModelName(),
@@ -279,8 +284,8 @@ class Table extends BaseTable
           // echo sprintf('! isIdField: "%s", isRelationId: "%s".'. "\n", 
           //   $this->strbool(!$isIdField), 
           //   $this->strbool(!$isRelationId));
-
-        if (!$isIdField && !$isRelationId && !$isDateField) 
+// !$isIdField
+        if (!$isRelationId && !$isDateField) 
           {
             $c = array();
             //  取出欄位名稱
