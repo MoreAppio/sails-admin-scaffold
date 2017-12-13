@@ -5,3 +5,5 @@ export_cargo/
 export_erd/
 bin/
 .tmp/
+erd.mwb
+erd.mwb.bak
