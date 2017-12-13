@@ -204,19 +204,19 @@ import arg from './lib/argument-parser';
         const codeBeautify =
           await this.appendBody(
             `${this.config.exportPath.cargo}/config/init/menuItem/menuItem.js`,
-            data => `module.exports.menuItems = [\n${data}\n];`,
+            data => `module.exports.menuItems = [\n${data}\n];\n`,
           ) &&
           await this.appendBody(
             `${this.config.exportPath.cargo}/config/adminRoutes.js`,
-            data => `module.exports.adminRoutes = {\n${data}\n};`,
+            data => `module.exports.adminRoutes = {\n${data}\n};\n`,
           ) &&
           await this.appendBody(
             `${this.config.exportPath.cargo}/config/adminPolicies.js`,
-            data => `module.exports.adminPolicies = {\n${data}\n};`,
+            data => `module.exports.adminPolicies = {\n${data}\n};\n`,
           ) &&
           await this.appendBody(
             `${this.config.exportPath.cargo}/.eslint-model`,
-            data => `{ "globals": {\n${data}\n}\n};`,
+            data => `{ "globals": {\n${data}\n}\n};\n`,
           ) &&
           await this.beautifyJs();
         if (!exportResult && !codeBeautify) {

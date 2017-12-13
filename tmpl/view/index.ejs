@@ -2,23 +2,22 @@
 <!-- client -->
 <table id="main-table" class="table table-striped table-bordered table-hover" width="100%">
   <thead>
-    <tr>
-      <% 
-        let count = 0; 
-        let sort = '';
-        let isVirtual = null;
-        fields.forEach(function(field) {
-          count++; 
-          sort = field.layout.sort ? field.layout.sort : '';
-          virtual = field.type.toLowerCase() === 'virtual' ? 'virtual' :  ''; 
-      %>
-      <% if (field.layout.label.toLowerCase() === 'id') { %><th width="30"
-          data-hide="phone"
-          data-class="id expand" 
-          class=""><i class="fa fa-fw text-muted fa-hashtag hidden-xs hidden-sm hidden-md"></i>ID</th><% } %>
+    <tr><% 
+      let count = 0; 
+      let sort = '';
+      let isVirtual = null;
+      fields.forEach(function(field) {
+        count++; 
+        sort = field.layout.sort ? field.layout.sort : '';
+        virtual = field.type.toLowerCase() === 'virtual' ? 'virtual' :  '';
+        if (field.layout.label.toLowerCase() === 'id') { %>
+      <th width="30"
+        data-hide="phone"
+        data-class="id expand" 
+        class=""><i class="fa fa-fw text-muted fa-hashtag hidden-xs hidden-sm hidden-md"></i>ID</th><% } else { %>
       <th data-hide="<%= (count > 5) ? 'always' : field.layout.hide %>"
           data-class="<%= field.layout.class %>" 
-          class="<%- sort %> <%- virtual %>"><%- field.layout.label %></th><% }); %>
+          class="<%- sort %> <%- virtual %>"><%- field.layout.label %></th><% }}); %>
       <th 
         width="80px" 
         data-hide="phone,tablet"
@@ -30,7 +29,7 @@
   <!-- client only -->
   <tbody>
     <tr v-for="item in data.items">
-      <td>{{ item.id }}</td><% fields.forEach(function(field){ %>
+      <% fields.forEach(function(field){ %>
       <td>{{ item.<%= field.name %>}}</td><% }); %>
       <td align="center" style="cursor: pointer;">
         <div class="row">
@@ -52,7 +51,6 @@
 
     // server only
     var columns = [
-      { 'data': 'id' },
       <% fields.forEach(function(field){ if (field.type.toLowerCase() !== 'virtual') { %>{ 'data': '<%- field.name %>' },<% } else {%>{ 'data': null },<% }%>
       <% }); %>{ 'data': null },
     ];
